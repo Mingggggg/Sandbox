@@ -1,0 +1,15 @@
+{
+  "name": "sandbox",
+  "version": "1.0.0",
+  "description": "A place for building and storing css components",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": "CSS component grab-n-go",
+  "author": "Mingyang Wang",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
