@@ -1,0 +1,6 @@
+{
+  "events": {
+    "restart": "gulp build"
+  },
+  "ignore": ["assets/", "dist/"]
+}
