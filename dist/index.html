@@ -14,12 +14,17 @@
 				</button>
 			</div>
 			<div class="s-box s-rt">
-				<button class="s-btn s-ct s-dis" id="home-login">
+				<button class="s-btn s-ct s-dis" msg="Coming soon" id="home-login">
 					LOG IN
 				</button>
 			</div>
+            <div class="s-box s-rt">
+                <button class="s-btn s-ct" id="home-compile">
+                    COMPILE
+                </button>
+            </div>
 			<div class="s-box s-rt">
-				<button class="s-btn s-ct s-dis" id="home-helper">
+				<button class="s-btn s-ct s-dis" msg="Coming soon" id="home-helper">
 					<span class="s-txt">?</span>
 				</button>
 			</div>
@@ -44,7 +49,7 @@
                             <tbody>
                                 <tr>
                                     <th>
-                                        <button class="s-btn s-drag s-ct">
+                                        <button class="s-btn s-drag s-ct active">
                                             <span class="s-txt">Input</span>
                                         </button>
                                     </th>
@@ -66,29 +71,63 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div id='mount'></div>
-						<!-- <div class="s-row" id="editor-module">
-							<div class="s-box">
-								<button class="s-btn s-drag s-ct">
-									<span class="s-txt">Button</span>
-								</button>
-							</div>
-							<div class="s-box">
-								<button class="s-btn s-drag s-ct">
-									<span class="s-txt">Card</span>
-								</button>
-							</div>
-                            <div class="s-box">
-                                <button class="s-btn s-drag s-ct">
-                                    <span class="s-txt">Slider</span>
+                        <div id="mount"></div>
+                        <div class="s-form">
+                            <div class='s-head'>
+                                <button class="s-btn s-ct">
+                                    Button
                                 </button>
                             </div>
-                            <div class="s-box">
-                                <button class="s-btn s-drag s-ct">
-                                    <span class="s-txt">Input</span>
-                                </button>
+                            <div class='s-body'>
+                                <table class='s-table'>
+                                    <tbody>
+                                        <tr class='s-tr-input'>
+                                            <td>
+                                                <div class="s-box">
+                                                    <span class="s-txt s-info" msg='Wrapper for the element'>Wrap</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="s-btn s-ct s-info" msg="Consumes the entire line">
+                                                    <span class="s-txt">Row</span>
+                                                </button>
+                                                <button class="s-btn s-ct s-info" msg="Consumes the dimension of the object only">
+                                                    <span class="s-txt">Box</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class='s-tr-range'>
+                                            <td colspan="2">
+                                                <div class="s-box">
+                                                    <span class="s-txt">Size</span>
+                                                </div>
+                                                <div class="s-box">
+                                                    <input type="range" class='s-range'>
+                                                </div>
+                                                <div class="s-box">
+                                                    <span class="s-txt s-info" msg='Wrapper for the element'>Size</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr class='s-tr-input'>
+                                            <td>
+                                                <div class="s-box">
+                                                    <span class="s-txt s-info" msg='Wrapper for the element'>Wrap</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="s-btn s-ct s-info" msg="Consumes the entire line">
+                                                    <span class="s-txt">Row</span>
+                                                </button>
+                                                <button class="s-btn s-ct s-info" msg="Consumes the dimension of the object only">
+                                                    <span class="s-txt">Box</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-						</div> -->
+                        </div>
 					</div>
 					<div class="s-bot">
 						<div class="s-overlay">

@@ -6,4 +6,8 @@ class HelloMessage extends React.Component {
     return <div>Hello {this.props.name}</div>;
   }
 }
-ReactDOM.render(<HelloMessage name="Sebastian" />, document.getElementById('mount'));
+
+class Previewer extends React.Component {
+
+}
+// ReactDOM.render(<HelloMessage name="Sebastian" />, document.getElementById('mount'));

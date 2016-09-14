@@ -88,7 +88,18 @@
 	  return HelloMessage;
 	}(_react2.default.Component);
 
-	_reactDom2.default.render(_react2.default.createElement(HelloMessage, { name: 'Sebastian' }), document.getElementById('mount'));
+	var Previewer = function (_React$Component2) {
+	  _inherits(Previewer, _React$Component2);
+
+	  function Previewer() {
+	    _classCallCheck(this, Previewer);
+
+	    return _possibleConstructorReturn(this, (Previewer.__proto__ || Object.getPrototypeOf(Previewer)).apply(this, arguments));
+	  }
+
+	  return Previewer;
+	}(_react2.default.Component);
+	// ReactDOM.render(<HelloMessage name="Sebastian" />, document.getElementById('mount'));
 
 /***/ },
 /* 1 */

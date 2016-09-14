@@ -1,6 +1,8 @@
 {
-  "events": {
-    "restart": "gulp build"
-  },
-  "ignore": ["assets/", "dist/"]
+    "events": {
+        "restart": "gulp build"
+    },
+    "ignore": ["dist"],
+    "watch": ["assets"],
+    "ext": "jsx json scss"
 }
