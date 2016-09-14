@@ -192,7 +192,7 @@ button {
   filter: brightness(90%); }
 
 .s-dis:before {
-  content: attr(msg);
+  content: attr(data-msg);
   position: absolute;
   border-radius: 3px;
   left: 5px;
@@ -207,15 +207,15 @@ button {
   -webkit-transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
   transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
   left: 5px;
-  bottom: -42px;
-  background: rgba(0, 0, 0, 0.75); }
+  bottom: -36px;
+  background: #333333; }
 
 .s-dis:hover:before {
   transform: translate3d(0, 0, 0);
   opacity: 1; }
 
 .s-info:before {
-  content: attr(msg);
+  content: attr(data-msg);
   position: absolute;
   border-radius: 3px;
   left: 5px;
@@ -297,7 +297,8 @@ button {
   width: 80%;
   margin: 0% 10%;
   background: #ececec;
-  box-shadow: 0px 0px 10px #d8d8d8;
+  height: 350px;
+  box-shadow: 0px 0px 10px #c9c9c9;
   -webkit-user-select: none;
   user-select: none; }
   .s-form .s-head {
@@ -313,7 +314,7 @@ button {
       color: #999999;
       padding: 8px 16px;
       border-radius: 20px;
-      box-shadow: 0px 0px 10px #d8d8d8;
+      box-shadow: 0px 0px 10px #d3d3d3;
       z-index: 10;
       background: #e9e9e9; }
     .s-form .s-head .s-btn:hover {
@@ -323,11 +324,10 @@ button {
       filter: none; }
   .s-form .s-body {
     position: relative;
-    top: 12px;
+    top: 0px;
     border-radius: 5px;
     z-index: 5;
     width: 100%;
-    height: 300px;
     background: #ececec;
     overflow: visible;
     cursor: default; }
@@ -338,7 +338,28 @@ button {
       color: #888888;
       font-weight: normal; }
       .s-form .s-body .s-table tr {
-        height: 42px; }
+        height: 50px; }
+      .s-form .s-body .s-table tr:first-child {
+        height: 60px; }
+      .s-form .s-body .s-table .s-tr-wrap td:first-child {
+        width: 40%;
+        border-bottom: 2px dashed #c3c3c3; }
+      .s-form .s-body .s-table .s-tr-wrap td:last-child {
+        text-align: center;
+        border-bottom: 2px dashed #c3c3c3; }
+      .s-form .s-body .s-table .s-tr-wrap .s-txt, .s-form .s-body .s-table .s-tr-wrap .s-btn {
+        vertical-align: middle; }
+      .s-form .s-body .s-table .s-tr-wrap .s-btn {
+        border-radius: 5px;
+        width: 50px;
+        height: 30px;
+        background: #b7b7b7;
+        color: white;
+        margin-right: 20px;
+        -webkit-transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+        transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1); }
+      .s-form .s-body .s-table .s-tr-wrap .active {
+        background: #4e4e4e; }
       .s-form .s-body .s-table .s-tr-input td:first-child {
         width: 40%; }
       .s-form .s-body .s-table .s-tr-input td:last-child {
@@ -381,9 +402,36 @@ button {
         background: #eeeeee; }
       .s-form .s-body .s-table .s-tr-range td {
         text-align: center; }
-        .s-form .s-body .s-table .s-tr-range td .s-box:first-child span {
+        .s-form .s-body .s-table .s-tr-range td .s-box {
+          margin-right: 15px; }
+        .s-form .s-body .s-table .s-tr-range td .s-box:first-child {
+          margin: 0 15px; }
+          .s-form .s-body .s-table .s-tr-range td .s-box:first-child span {
+            font-size: 12px;
+            vertical-align: middle; }
+        .s-form .s-body .s-table .s-tr-range td .s-box:nth-child(2):after {
+          content: attr(data-msg);
+          position: absolute;
+          border-radius: 3px;
+          left: 5px;
+          bottom: -36px;
           font-size: 12px;
-          vertical-align: middle; }
+          color: white;
+          padding: 8px 10px;
+          white-space: nowrap;
+          opacity: 0;
+          z-index: 10;
+          transform: translate3d(0, 5px, 0);
+          -webkit-transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+          transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+          padding: 4px 8px;
+          left: 50%;
+          transform: translate3d(-50%, 5px, 0);
+          bottom: 34px;
+          background: #333333; }
+        .s-form .s-body .s-table .s-tr-range td .s-box:nth-child(2):active:after {
+          transform: translate3d(-50%, 0, 0);
+          opacity: 1; }
         .s-form .s-body .s-table .s-tr-range td .s-box:last-child span {
           font-size: 20px;
           vertical-align: middle; }
