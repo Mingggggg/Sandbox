@@ -7,6 +7,11 @@ class BaseComponent extends React.Component {
     _bind(...methods) {
         methods.forEach( (method) => this[method] = this[method].bind(this) );
     }
+    _handleChange(state) {
+        this.setState(
+            Utils.extend(this.state, state)
+        );
+    }
 }
 
 class Draggable extends BaseComponent {
@@ -45,18 +50,79 @@ class Draggable extends BaseComponent {
                 left: this.state.left+'px'
             };
         }
-        return (<div style={style} id={this.props.id}>
-                    <div className="s-window" ref='window'>
-    					<div className="s-row s-head">
-    						<div className="s-box s-rt">
-    							<button className="s-btn s-drag s-ct">
-    								DRAG
-    							</button>
-    						</div>
-    					</div>
-    					{body}
-    				</div>
-                </div>);
+        return (
+            <div style={style} id={this.props.id}>
+                <div className="s-window" ref='window'>
+					<div className="s-row s-head">
+						<div className="s-box s-rt">
+							<button className="s-btn s-drag s-ct">
+								DRAG
+							</button>
+						</div>
+					</div>
+					{body}
+				</div>
+            </div>
+        );
+    }
+}
+
+
+class Renderer extends BaseComponent {
+    constructor () {
+        super();
+        let modules = Object.keys(Config.modules);
+        this.state = {
+            module: modules[0],
+            preset: Object.keys(Config.modules[modules[0]])[0],
+            wrapper: 'row',
+            style: {},
+        };
+    }
+    componentDidMount () {
+        EventCenter.bind('restartRenderer', (module, preset) => {
+            this._handleChange({
+                module: module,
+                preset: preset
+            });
+        });
+        EventCenter.bind('updateRenderer', (attr, value) => {
+            this._handleChange({
+                style: {
+                    [attr]: value
+                }
+            });
+        });
+    }
+    render () {
+        let component, style, className;
+        switch (this.state.module) {
+            case 'button':
+                style = Utils.clone(this.state.style);
+                className = `s-btn-${this.state.preset}`;
+                component = (
+                    <button style={style} className={className}>button</button>
+                );
+                if (this.state.preset === 'circle') component = (
+                    <button style={style} className={className}>
+                        <span className="s-txt">button</span>
+                    </button>
+                );
+                break;
+            default:
+                component = (
+                    <span>Hi</span>
+                );
+        }
+        let wrapper = <div className='s-box'>{component}</div>;
+        if (this.state.wrapper === 'row') wrapper = (
+            <div className='s-row'>
+                <div className='s-box'>
+                    {component}
+                </div>
+            </div>
+        );
+        return (wrapper);
     }
 }
 
@@ -65,155 +131,14 @@ class Previewer extends Draggable {
         super(props);
     }
     render () {
-        return super.render(<div className="s-body"></div>);
-    }
-}
-
-class Editor extends Draggable {
-    constructor (props) {
-        super(props);
-        this._bind('_compile', '_handleChange');
-        this.state = {
-            module: Config.modules[0],
-            wrapper: 'row'
-        };
-    }
-    _handleChange(state) {
-        this.setState(
-            Utils.extend(this.state, state
-        ));
-    }
-    _compile () {
-        // Build components
-        let components = Config.modules.map((module, index) => {
-            let className = "s-btn s-ct";
-            let switchModule = () => {
-                this._handleChange({
-                    module: module,
-                    wrapper: this.state.wrapper
-                });
-            };
-            // Highlight current module
-            if (module === this.state.module) {
-                className+=' active';
-                switchModule = () => {
-                    return 0
-                };
-            }
-            return (
-                <th id={index} key={index}>
-                    <button className={className} onClick={switchModule} >
-                        <span className="s-txt">{module}</span>
-                    </button>
-                </th>
-            );
-            <td>
-                <button className="s-btn s-ct s-info" data-msg="Consumes the entire line">
-                    <span className="s-txt">Row</span>
-                </button>
-                <button className="s-btn s-ct s-info" data-msg="Consumes the dimension of the object only">
-                    <span className="s-txt">Box</span>
-                </button>
-            </td>
-        });
-        // Build Wrapper Select
-        let wrappers = ['row', 'box'].map((wrapper, index) => {
-            let className = "s-btn s-ct s-info";
-            let switchWrapper = () => {
-                this._handleChange({
-                    module: this.state.module,
-                    wrapper: wrapper
-                });
-            };
-            if (wrapper === this.state.wrapper) {
-                className+=' active';
-                switchWrapper = () => {
-                    return 0
-                };
-            }
-            return (
-                <button className={className} data-msg="Consumes the entire line" onClick={switchWrapper} key={index}>
-                    <span className="s-txt">{wrapper}</span>
-                </button>
-            );
-
-        });
-        // Build attribute inputs
-        let settings = Config[this.state.module];
-        let inputs = Object.keys(settings).map((attr, index) => {
-            let value = settings[attr][0];
-            let type = settings[attr][1];
-            return (
-                <Input type={type} attr={attr} value={value} key={index} subkey={index} />
-            );
-        });
-
-        // .map((module, index) => {
-        //     let className = "s-btn s-ct";
-        //     let switchModule = () => {
-        //         this._handleChange({
-        //             module: module
-        //         });
-        //     };
-        //     // Highlight current module
-        //     if (module === this.state.module) {
-        //         className+=' active';
-        //         switchModule = () => {
-        //             return 0
-        //         };
-        //     }
-        //     return (
-        //         <th id={index} key={index}>
-        //             <button className={className} onClick={switchModule} >
-        //                 <span className="s-txt">{module}</span>
-        //             </button>
-        //         </th>
-        //     );
-        // });
-        return (
-            <div className="s-body">
-                <table className="s-table" id="editor-module">
-                    <tbody>
-                        <tr>
-                            {components}
-                        </tr>
-                    </tbody>
-                </table>
-                <div className="s-form">
-                    <div className='s-head'>
-                        <button className="s-btn s-ct">
-                            {this.state.module}
-                        </button>
-                    </div>
-                    <div className='s-body'>
-                        <table className='s-table'>
-                            <tbody>
-                                <tr className='s-tr-wrap' key={-1}>
-                                    <td>
-                                        <div className="s-box">
-                                            <span className="s-txt s-info" data-msg='Wrapper for the element'>Wrapper</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {wrappers[0]}
-                                        {wrappers[1]}
-                                    </td>
-                                </tr>
-                                {inputs}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        return super.render(
+            <div id='compile-source' className='s-body'>
+                <Renderer />
             </div>
         );
     }
-    render () {
-        this._body = this._compile();
-        return super.render(
-            this._body
-        );
-    }
 }
+
 
 class Input extends BaseComponent {
     constructor (props) {
@@ -223,16 +148,14 @@ class Input extends BaseComponent {
             value: this.props.value
         }
     }
-    _handleChange(state) {
-        this.setState(
-            Utils.extend(this.state, state)
-        );
-    }
     _compile () {
+        let onChange;
         if (this.props.type === 'range') {
-            var onChange = (event) => {
+            onChange = (event) => {
+                let value = event.target.value;
+                EventCenter.trigger('updateRenderer', this.props.attr, `${value}px`);
                 this._handleChange({
-                    value: event.target.value
+                    value: value
                 });
             };
             return (
@@ -251,29 +174,149 @@ class Input extends BaseComponent {
                 </tr>
             );
         } else if (this.props.type === 'input') {
+            onChange = (event) => {
+                let value = event.target.value;
+                if (!$.isNumeric(value)) EventCenter.trigger('updateRenderer', this.props.attr, value);
+                this._handleChange({
+                    value: value
+                });
+            };
             return (
                 <tr className='s-tr-input'>
-                    <td>
+                    <td colSpan="2">
                         <div className="s-box">
                             <span className="s-txt s-info" data-msg='Wrapper for the element'>{this.props.attr}</span>
                         </div>
-                    </td>
-                    <td>
-                        <button className="s-btn s-ct s-info" data-msg="Consumes the entire line">
-                            <span className="s-txt">{this.props.value}</span>
-                        </button>
+                        <input type="text" className='s-input' value={this.state.value} onChange={onChange} />
                     </td>
                 </tr>
             );
         }
     }
+    componentWillReceiveProps (nextProps) {
+        this._handleChange({
+            value: nextProps.value
+        });
+    }
     render () {
-        // this._body
         return (
             this._compile()
         );
     }
 }
+
+class Editor extends Draggable {
+    constructor (props) {
+        super(props);
+        this._bind('_compile', '_handleChange');
+        let modules = Object.keys(Config.modules);
+        this.state = {
+            module: modules[0],
+            preset: Object.keys(Config.modules[modules[0]])[0],
+        };
+    }
+    _compile () {
+        // Build components
+        let components = Object.keys(Config.modules).map((module, index) => {
+            let className = "s-btn s-ct";
+            let switchModule = () => {
+                let preset = Object.keys(Config.modules[module])[0];
+                EventCenter.trigger('restartRenderer', module, preset);
+                this._handleChange({
+                    module: module,
+                    preset: preset
+                });
+            };
+            // Highlight current module
+            if (module === this.state.module) {
+                className+=' active';
+                switchModule = () => {
+                    return 0
+                };
+            }
+            return (
+                <th key={index}>
+                    <button className={className} onClick={switchModule} >
+                        <span className="s-txt">{module}</span>
+                    </button>
+                </th>
+            );
+        });
+        // Build Preset
+        let presets = Object.keys(Config.modules[this.state.module]).map((preset, index) => {
+            let className = "s-btn s-ct s-info";
+            let loadPreset = () => {
+                EventCenter.trigger('restartRenderer', this.state.module, preset);
+                this._handleChange({
+                    preset: preset
+                });
+            };
+            if (preset === this.state.preset) {
+                className+=' active';
+                loadPreset = () => {
+                    return 0
+                };
+            }
+            return (
+                <button className={className} data-msg="Consumes the entire line" onClick={loadPreset} key={index}>
+                    {preset}
+                </button>
+            );
+        });
+        // Build attribute inputs
+        let settings = Config.modules[this.state.module][this.state.preset];
+        let inputs = Object.keys(settings).map((attr, index) => {
+            let value = settings[attr].value;
+            let type = settings[attr].type;
+            return (
+                <Input type={type} attr={attr} value={value} key={index} />
+            );
+        });
+        return (
+            <div className="s-body">
+                <table className="s-table" id="editor-module">
+                    <tbody>
+                        <tr>
+                            {components}
+                        </tr>
+                    </tbody>
+                </table>
+                <div className="s-form">
+                    <div className='s-head'>
+                        <button className="s-btn s-ct">
+                            {this.state.module}
+                        </button>
+                    </div>
+                    <div className='s-body'>
+                        <table className='s-table'>
+                            <tbody>
+                                <tr className='s-tr-btn' key={-1}>
+                                    <td>
+                                        <div className="s-box">
+                                            <span className="s-txt s-info" data-msg='Wrapper for the element'>Presets</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {presets}
+                                    </td>
+                                </tr>
+                                {inputs}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    render () {
+        this._body = this._compile();
+        return super.render(
+            this._body
+        );
+    }
+}
+
+
 
 // Page Logic
 document.onmousemove = (event) => {

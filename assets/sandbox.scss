@@ -2,16 +2,14 @@
 body {
 	padding: 0;
 	margin: 0;
-	font-family: 'Quicksand', sans-serif;
-	font-family: 'Ubuntu', sans-serif;
+}
+
+body, button, input {
+	// font-family: 'Quicksand', sans-serif;
+	// font-family: 'Ubuntu', sans-serif;
 	font-family: 'Montserrat', sans-serif;
 }
 
-button {
-	font-family: 'Quicksand', sans-serif;
-	font-family: 'Ubuntu', sans-serif;
-	font-family: 'Montserrat', sans-serif;
-}
 
 
 // Mixins
@@ -89,6 +87,7 @@ button {
     	-moz-border-radius: 40px;
     	border-radius: 40px;
         background: white;
+        border: 1px solid #e5e5e5;
         -webkit-box-shadow: 0 0 3px gray;
         -moz-box-shadow: 0 0 3px gray;
         box-shadow: 0 0 3px gray;
@@ -299,6 +298,8 @@ button {
 	font-size: 24px;
 }
 
+// Basic style
+
 .s-btn {
 	position:relative;
 	border: 0;
@@ -323,7 +324,8 @@ button {
     filter: brightness(90%);
 }
 
-//
+
+
 // .s-dis {
 // 	// -webkit-filter: opacity(0.5);
 //     // filter: opacity(0.5);
@@ -348,8 +350,6 @@ button {
     transform: translate3d(0,0,0);
     opacity: 1;
 }
-
-
 
 .s-row {
 	display: block;
@@ -423,8 +423,8 @@ button {
 .s-form {
     position: relative;
     top: 36px;
-    width: 80%;
-    margin: 0% 10%;
+    width: 84%;
+    margin: 0% 8%;
     background: #ececec;
     height: 350px;
     box-shadow: 0px 0px 10px #c9c9c9;
@@ -476,51 +476,58 @@ button {
             tr:first-child {
                 height: 60px;
             }
-            .s-tr-wrap {
+            .s-tr-btn {
+                // Name
                 td:first-child {
                     width: 40%;
                     border-bottom: 2px dashed #c3c3c3;
+                    font-size: 18px;
                 }
+                // Wrapper for two btns
                 td:last-child {
                     text-align: center;
                     border-bottom: 2px dashed #c3c3c3;
                 }
-                .s-txt, .s-btn {
-                    vertical-align: middle;
-                }
                 .s-btn {
                     border-radius: 5px;
-                    width: 50px;
-                    height: 30px;
+                    padding: 6px 12px;
                     background: #b7b7b7;
                     color: white;
                     margin-right: 20px;
-                    @include transit('swift');
+                    @include transit('fast');
+                    vertical-align: middle;
+                }
+                .s-btn:not(.active):hover {
+                    background: #5e5e5e;
                 }
                 .active {
                     background: #4e4e4e;
                 }
+
             }
             .s-tr-input {
-                td:first-child {
-                    width: 40%;
+                .s-box {
+                    margin-right: 60px;
+                    .s-txt {
+                        vertical-align: middle;
+                        font-size: 18px;
+                    }
                 }
-                td:last-child {
+                .s-input[type="text"] {
+                    padding: 4px;
+                    background: #ececec;
+                    border: none;
+                    width: 32%;
                     text-align: center;
-                }
-                .s-txt, .s-btn {
+                    color: #888888;
+                    border-bottom: solid 2px #c5c5c5;
+                    @include transit('fast');
                     vertical-align: middle;
                 }
-                .s-btn {
-                    border-radius: 2px;
-                    width: 50px;
-                    height: 30px;
-                    background: #b7b7b7;
-                    color: white;
-                    margin-right: 20px;
-                }
-                .s-btn {
-
+                .s-input[type="text"]:focus {
+                    width: 40%;
+                    outline: 0;
+                    border-bottom: solid 2px #b0b0b0;
                 }
             }
             .s-tr-range {
@@ -530,13 +537,15 @@ button {
                     .s-box {
                         margin-right:15px;
                     }
+                    // Name - small
                     .s-box:first-child {
-                        margin: 0 15px;
+                        margin: 0 12px;
                         span {
                             font-size: 12px;
                             vertical-align: middle;
                         }
                     }
+                    // Slider
                     .s-box:nth-child(2):after {
                         @include popup('range');
                     }
@@ -544,6 +553,7 @@ button {
                         transform: translate3d(-50%,0,0);
                         opacity: 1;
                     }
+                    // Name - large
                     .s-box:last-child {
                         span {
                             font-size: 20px;
@@ -561,4 +571,23 @@ button {
     opacity: 0.1;
     font-weight: bold;
     z-index: 0;
+}
+
+// Output components
+.s-btn-circle {
+    @extend .s-btn;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #FFFFFF;
+	background: #40b572;
+}
+
+.s-btn-square {
+    @extend .s-btn;
+	border-radius: 50px;
+	padding: 8px 20px;
+	font-size: 18px;
+	color: #FFFFFF;
+	background: #40b572;
 }

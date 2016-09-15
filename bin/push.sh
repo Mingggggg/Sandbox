@@ -1,5 +1,6 @@
 #!/bin/bash
 
-# git status
+# Automate build workflow
+## Up version number
 
 echo "Mingggggg" | git push origin master

@@ -66,6 +66,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -93,6 +95,11 @@
 	            methods.forEach(function (method) {
 	                return _this2[method] = _this2[method].bind(_this2);
 	            });
+	        }
+	    }, {
+	        key: '_handleChange',
+	        value: function _handleChange(state) {
+	            this.setState(_helper.Utils.extend(this.state, state));
 	        }
 	    }]);
 
@@ -176,6 +183,94 @@
 	    return Draggable;
 	}(BaseComponent);
 
+	var Renderer = function (_BaseComponent2) {
+	    _inherits(Renderer, _BaseComponent2);
+
+	    function Renderer() {
+	        _classCallCheck(this, Renderer);
+
+	        var _this5 = _possibleConstructorReturn(this, (Renderer.__proto__ || Object.getPrototypeOf(Renderer)).call(this));
+
+	        var modules = Object.keys(_helper.Config.modules);
+	        _this5.state = {
+	            module: modules[0],
+	            preset: Object.keys(_helper.Config.modules[modules[0]])[0],
+	            wrapper: 'row',
+	            style: {}
+	        };
+	        return _this5;
+	    }
+
+	    _createClass(Renderer, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this6 = this;
+
+	            _helper.EventCenter.bind('restartRenderer', function (module, preset) {
+	                _this6._handleChange({
+	                    module: module,
+	                    preset: preset
+	                });
+	            });
+	            _helper.EventCenter.bind('updateRenderer', function (attr, value) {
+	                _this6._handleChange({
+	                    style: _defineProperty({}, attr, value)
+	                });
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var component = void 0,
+	                style = void 0,
+	                className = void 0;
+	            switch (this.state.module) {
+	                case 'button':
+	                    style = _helper.Utils.clone(this.state.style);
+	                    className = 's-btn-' + this.state.preset;
+	                    component = _react2.default.createElement(
+	                        'button',
+	                        { style: style, className: className },
+	                        'button'
+	                    );
+	                    if (this.state.preset === 'circle') component = _react2.default.createElement(
+	                        'button',
+	                        { style: style, className: className },
+	                        _react2.default.createElement(
+	                            'span',
+	                            { className: 's-txt' },
+	                            'button'
+	                        )
+	                    );
+	                    break;
+	                default:
+	                    component = _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Hi'
+	                    );
+	            }
+	            var wrapper = _react2.default.createElement(
+	                'div',
+	                { className: 's-box' },
+	                component
+	            );
+	            if (this.state.wrapper === 'row') wrapper = _react2.default.createElement(
+	                'div',
+	                { className: 's-row' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 's-box' },
+	                    component
+	                )
+	            );
+	            return wrapper;
+	        }
+	    }]);
+
+	    return Renderer;
+	}(BaseComponent);
+
 	var Previewer = function (_Draggable) {
 	    _inherits(Previewer, _Draggable);
 
@@ -188,12 +283,121 @@
 	    _createClass(Previewer, [{
 	        key: 'render',
 	        value: function render() {
-	            return _get(Previewer.prototype.__proto__ || Object.getPrototypeOf(Previewer.prototype), 'render', this).call(this, _react2.default.createElement('div', { className: 's-body' }));
+	            return _get(Previewer.prototype.__proto__ || Object.getPrototypeOf(Previewer.prototype), 'render', this).call(this, _react2.default.createElement(
+	                'div',
+	                { id: 'compile-source', className: 's-body' },
+	                _react2.default.createElement(Renderer, null)
+	            ));
 	        }
 	    }]);
 
 	    return Previewer;
 	}(Draggable);
+
+	var Input = function (_BaseComponent3) {
+	    _inherits(Input, _BaseComponent3);
+
+	    function Input(props) {
+	        _classCallCheck(this, Input);
+
+	        var _this8 = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
+
+	        _this8._bind('_compile', '_handleChange');
+	        _this8.state = {
+	            value: _this8.props.value
+	        };
+	        return _this8;
+	    }
+
+	    _createClass(Input, [{
+	        key: '_compile',
+	        value: function _compile() {
+	            var _this9 = this;
+
+	            var onChange = void 0;
+	            if (this.props.type === 'range') {
+	                onChange = function onChange(event) {
+	                    var value = event.target.value;
+	                    _helper.EventCenter.trigger('updateRenderer', _this9.props.attr, value + 'px');
+	                    _this9._handleChange({
+	                        value: value
+	                    });
+	                };
+	                return _react2.default.createElement(
+	                    'tr',
+	                    { className: 's-tr-range' },
+	                    _react2.default.createElement(
+	                        'td',
+	                        { colSpan: '2' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 's-box' },
+	                            _react2.default.createElement(
+	                                'span',
+	                                { className: 's-txt' },
+	                                this.props.attr
+	                            )
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 's-box', 'data-msg': this.state.value },
+	                            _react2.default.createElement('input', { type: 'range', className: 's-range', value: this.state.value, onChange: onChange })
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 's-box' },
+	                            _react2.default.createElement(
+	                                'span',
+	                                { className: 's-txt s-info' },
+	                                this.props.attr
+	                            )
+	                        )
+	                    )
+	                );
+	            } else if (this.props.type === 'input') {
+	                onChange = function onChange(event) {
+	                    var value = event.target.value;
+	                    if (!_jquery2.default.isNumeric(value)) _helper.EventCenter.trigger('updateRenderer', _this9.props.attr, value);
+	                    _this9._handleChange({
+	                        value: value
+	                    });
+	                };
+	                return _react2.default.createElement(
+	                    'tr',
+	                    { className: 's-tr-input' },
+	                    _react2.default.createElement(
+	                        'td',
+	                        { colSpan: '2' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 's-box' },
+	                            _react2.default.createElement(
+	                                'span',
+	                                { className: 's-txt s-info', 'data-msg': 'Wrapper for the element' },
+	                                this.props.attr
+	                            )
+	                        ),
+	                        _react2.default.createElement('input', { type: 'text', className: 's-input', value: this.state.value, onChange: onChange })
+	                    )
+	                );
+	            }
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            this._handleChange({
+	                value: nextProps.value
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return this._compile();
+	        }
+	    }]);
+
+	    return Input;
+	}(BaseComponent);
 
 	var Editor = function (_Draggable2) {
 	    _inherits(Editor, _Draggable2);
@@ -201,37 +405,35 @@
 	    function Editor(props) {
 	        _classCallCheck(this, Editor);
 
-	        var _this6 = _possibleConstructorReturn(this, (Editor.__proto__ || Object.getPrototypeOf(Editor)).call(this, props));
+	        var _this10 = _possibleConstructorReturn(this, (Editor.__proto__ || Object.getPrototypeOf(Editor)).call(this, props));
 
-	        _this6._bind('_compile', '_handleChange');
-	        _this6.state = {
-	            module: _helper.Config.modules[0],
-	            wrapper: 'row'
+	        _this10._bind('_compile', '_handleChange');
+	        var modules = Object.keys(_helper.Config.modules);
+	        _this10.state = {
+	            module: modules[0],
+	            preset: Object.keys(_helper.Config.modules[modules[0]])[0]
 	        };
-	        return _this6;
+	        return _this10;
 	    }
 
 	    _createClass(Editor, [{
-	        key: '_handleChange',
-	        value: function _handleChange(state) {
-	            this.setState(_helper.Utils.extend(this.state, state));
-	        }
-	    }, {
 	        key: '_compile',
 	        value: function _compile() {
-	            var _this7 = this;
+	            var _this11 = this;
 
 	            // Build components
-	            var components = _helper.Config.modules.map(function (module, index) {
+	            var components = Object.keys(_helper.Config.modules).map(function (module, index) {
 	                var className = "s-btn s-ct";
 	                var switchModule = function switchModule() {
-	                    _this7._handleChange({
+	                    var preset = Object.keys(_helper.Config.modules[module])[0];
+	                    _helper.EventCenter.trigger('restartRenderer', module, preset);
+	                    _this11._handleChange({
 	                        module: module,
-	                        wrapper: _this7.state.wrapper
+	                        preset: preset
 	                    });
 	                };
 	                // Highlight current module
-	                if (module === _this7.state.module) {
+	                if (module === _this11.state.module) {
 	                    className += ' active';
 	                    switchModule = function switchModule() {
 	                        return 0;
@@ -239,7 +441,7 @@
 	                }
 	                return _react2.default.createElement(
 	                    'th',
-	                    { id: index, key: index },
+	                    { key: index },
 	                    _react2.default.createElement(
 	                        'button',
 	                        { className: className, onClick: switchModule },
@@ -250,84 +452,35 @@
 	                        )
 	                    )
 	                );
-	                _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 's-btn s-ct s-info', 'data-msg': 'Consumes the entire line' },
-	                        _react2.default.createElement(
-	                            'span',
-	                            { className: 's-txt' },
-	                            'Row'
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'button',
-	                        { className: 's-btn s-ct s-info', 'data-msg': 'Consumes the dimension of the object only' },
-	                        _react2.default.createElement(
-	                            'span',
-	                            { className: 's-txt' },
-	                            'Box'
-	                        )
-	                    )
-	                );
 	            });
-	            // Build Wrapper Select
-	            var wrappers = ['row', 'box'].map(function (wrapper, index) {
+	            // Build Preset
+	            var presets = Object.keys(_helper.Config.modules[this.state.module]).map(function (preset, index) {
 	                var className = "s-btn s-ct s-info";
-	                var switchWrapper = function switchWrapper() {
-	                    _this7._handleChange({
-	                        module: _this7.state.module,
-	                        wrapper: wrapper
+	                var loadPreset = function loadPreset() {
+	                    _helper.EventCenter.trigger('restartRenderer', _this11.state.module, preset);
+	                    _this11._handleChange({
+	                        preset: preset
 	                    });
 	                };
-	                if (wrapper === _this7.state.wrapper) {
+	                if (preset === _this11.state.preset) {
 	                    className += ' active';
-	                    switchWrapper = function switchWrapper() {
+	                    loadPreset = function loadPreset() {
 	                        return 0;
 	                    };
 	                }
 	                return _react2.default.createElement(
 	                    'button',
-	                    { className: className, 'data-msg': 'Consumes the entire line', onClick: switchWrapper, key: index },
-	                    _react2.default.createElement(
-	                        'span',
-	                        { className: 's-txt' },
-	                        wrapper
-	                    )
+	                    { className: className, 'data-msg': 'Consumes the entire line', onClick: loadPreset, key: index },
+	                    preset
 	                );
 	            });
 	            // Build attribute inputs
-	            var settings = _helper.Config[this.state.module];
+	            var settings = _helper.Config.modules[this.state.module][this.state.preset];
 	            var inputs = Object.keys(settings).map(function (attr, index) {
-	                var value = settings[attr][0];
-	                var type = settings[attr][1];
-	                return _react2.default.createElement(Input, { type: type, attr: attr, value: value, key: index, subkey: index });
+	                var value = settings[attr].value;
+	                var type = settings[attr].type;
+	                return _react2.default.createElement(Input, { type: type, attr: attr, value: value, key: index });
 	            });
-
-	            // .map((module, index) => {
-	            //     let className = "s-btn s-ct";
-	            //     let switchModule = () => {
-	            //         this._handleChange({
-	            //             module: module
-	            //         });
-	            //     };
-	            //     // Highlight current module
-	            //     if (module === this.state.module) {
-	            //         className+=' active';
-	            //         switchModule = () => {
-	            //             return 0
-	            //         };
-	            //     }
-	            //     return (
-	            //         <th id={index} key={index}>
-	            //             <button className={className} onClick={switchModule} >
-	            //                 <span className="s-txt">{module}</span>
-	            //             </button>
-	            //         </th>
-	            //     );
-	            // });
 	            return _react2.default.createElement(
 	                'div',
 	                { className: 's-body' },
@@ -367,7 +520,7 @@
 	                                null,
 	                                _react2.default.createElement(
 	                                    'tr',
-	                                    { className: 's-tr-wrap', key: -1 },
+	                                    { className: 's-tr-btn', key: -1 },
 	                                    _react2.default.createElement(
 	                                        'td',
 	                                        null,
@@ -377,15 +530,14 @@
 	                                            _react2.default.createElement(
 	                                                'span',
 	                                                { className: 's-txt s-info', 'data-msg': 'Wrapper for the element' },
-	                                                'Wrapper'
+	                                                'Presets'
 	                                            )
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        'td',
 	                                        null,
-	                                        wrappers[0],
-	                                        wrappers[1]
+	                                        presets
 	                                    )
 	                                ),
 	                                inputs
@@ -405,112 +557,6 @@
 
 	    return Editor;
 	}(Draggable);
-
-	var Input = function (_BaseComponent2) {
-	    _inherits(Input, _BaseComponent2);
-
-	    function Input(props) {
-	        _classCallCheck(this, Input);
-
-	        var _this8 = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).call(this, props));
-
-	        _this8._bind('_compile', '_handleChange');
-	        _this8.state = {
-	            value: _this8.props.value
-	        };
-	        return _this8;
-	    }
-
-	    _createClass(Input, [{
-	        key: '_handleChange',
-	        value: function _handleChange(state) {
-	            this.setState(_helper.Utils.extend(this.state, state));
-	        }
-	    }, {
-	        key: '_compile',
-	        value: function _compile() {
-	            var _this9 = this;
-
-	            if (this.props.type === 'range') {
-	                var onChange = function onChange(event) {
-	                    _this9._handleChange({
-	                        value: event.target.value
-	                    });
-	                };
-	                return _react2.default.createElement(
-	                    'tr',
-	                    { className: 's-tr-range' },
-	                    _react2.default.createElement(
-	                        'td',
-	                        { colSpan: '2' },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 's-box' },
-	                            _react2.default.createElement(
-	                                'span',
-	                                { className: 's-txt' },
-	                                this.props.attr
-	                            )
-	                        ),
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 's-box', 'data-msg': this.state.value },
-	                            _react2.default.createElement('input', { type: 'range', className: 's-range', value: this.state.value, onChange: onChange })
-	                        ),
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 's-box' },
-	                            _react2.default.createElement(
-	                                'span',
-	                                { className: 's-txt s-info' },
-	                                this.props.attr
-	                            )
-	                        )
-	                    )
-	                );
-	            } else if (this.props.type === 'input') {
-	                return _react2.default.createElement(
-	                    'tr',
-	                    { className: 's-tr-input' },
-	                    _react2.default.createElement(
-	                        'td',
-	                        null,
-	                        _react2.default.createElement(
-	                            'div',
-	                            { className: 's-box' },
-	                            _react2.default.createElement(
-	                                'span',
-	                                { className: 's-txt s-info', 'data-msg': 'Wrapper for the element' },
-	                                this.props.attr
-	                            )
-	                        )
-	                    ),
-	                    _react2.default.createElement(
-	                        'td',
-	                        null,
-	                        _react2.default.createElement(
-	                            'button',
-	                            { className: 's-btn s-ct s-info', 'data-msg': 'Consumes the entire line' },
-	                            _react2.default.createElement(
-	                                'span',
-	                                { className: 's-txt' },
-	                                this.props.value
-	                            )
-	                        )
-	                    )
-	                );
-	            }
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            // this._body
-	            return this._compile();
-	        }
-	    }]);
-
-	    return Input;
-	}(BaseComponent);
 
 	// Page Logic
 
@@ -32049,19 +32095,94 @@
 	};
 
 	var extend = function extend(prev, next) {
-	    return clone(_jquery2.default.extend(prev, next));
+	    return clone(_jquery2.default.extend(true, prev, next));
 	};
 
 	var EventCenter = exports.EventCenter = new MicroEvent();
 	var Config = exports.Config = {
-	    modules: ['button', 'input', 'slider', 'popup'],
-	    button: {
-	        padding: ['10px', 'range'],
-	        radius: ['10px', 'range']
+	    modules: {
+	        button: {
+	            circle: {
+	                padding: {
+	                    value: 10,
+	                    type: 'range'
+	                },
+	                color: {
+	                    value: '#999999',
+	                    type: "input"
+	                }
+	            },
+	            square: {
+	                padding: {
+	                    value: 20,
+	                    type: 'range'
+	                },
+	                color: {
+	                    value: '#888888',
+	                    type: "input"
+	                }
+	            }
+	        },
+	        input: {
+	            underline: {
+	                padding: {
+	                    value: 10,
+	                    type: 'range'
+	                },
+	                color: {
+	                    value: '#999999',
+	                    type: "input"
+	                }
+	            },
+	            glow: {
+	                padding: {
+	                    value: 10,
+	                    type: 'range'
+	                },
+	                color: {
+	                    value: '#888888',
+	                    type: "input"
+	                }
+	            }
+	        },
+	        slider: {
+	            padding: {
+	                value: 10,
+	                type: 'range'
+	            },
+	            color: {
+	                value: '#999999',
+	                type: "input"
+	            }
+	        },
+	        popup: {
+	            padding: {
+	                value: 10,
+	                type: 'range'
+	            },
+	            color: {
+	                value: '#999999',
+	                type: "input"
+	            }
+	        }
 	    },
-	    input: {
-	        color: ['#999999', 'input'],
-	        fontSize: ['32px', 'range']
+	    presets: {
+	        button: {
+	            circle: {
+	                borderRadius: '50%',
+	                width: "50px",
+	                paddingBottom: "50px"
+	            },
+	            square: {}
+	        },
+	        input: {
+	            underline: {
+	                borderRadius: '50%',
+	                width: "50px",
+	                paddingBottom: "50px"
+	            },
+	            glow: {}
+	        }
 	    }
 	};
 	var Utils = exports.Utils = {
