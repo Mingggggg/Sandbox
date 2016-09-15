@@ -174,7 +174,12 @@
 	                            )
 	                        )
 	                    ),
-	                    body
+	                    body,
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 's-bot' },
+	                        _react2.default.createElement('div', { className: 's-overlay' })
+	                    )
 	                )
 	            );
 	        }
@@ -529,7 +534,7 @@
 	                                            { className: 's-box' },
 	                                            _react2.default.createElement(
 	                                                'span',
-	                                                { className: 's-txt s-info', 'data-msg': 'Wrapper for the element' },
+	                                                { className: 's-txt s-ct s-info', 'data-msg': 'Wrapper for the element' },
 	                                                'Presets'
 	                                            )
 	                                        )

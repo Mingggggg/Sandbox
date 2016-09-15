@@ -61,7 +61,12 @@ class Draggable extends BaseComponent {
 						</div>
 					</div>
 					{body}
+                    <div className="s-bot">
+                        <div className="s-overlay">
+                        </div>
+                    </div>
 				</div>
+
             </div>
         );
     }
@@ -293,7 +298,7 @@ class Editor extends Draggable {
                                 <tr className='s-tr-btn' key={-1}>
                                     <td>
                                         <div className="s-box">
-                                            <span className="s-txt s-info" data-msg='Wrapper for the element'>Presets</span>
+                                            <span className="s-txt s-ct s-info" data-msg='Wrapper for the element'>Presets</span>
                                         </div>
                                     </td>
                                     <td>
