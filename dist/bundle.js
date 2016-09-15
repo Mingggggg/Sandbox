@@ -66,8 +66,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -207,20 +205,68 @@
 	    }
 
 	    _createClass(Renderer, [{
+	        key: '_handleChange',
+	        value: function _handleChange(state) {
+	            var cloneState = this.state;
+
+	            for (var _len2 = arguments.length, arg = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	                arg[_key2 - 1] = arguments[_key2];
+	            }
+
+	            if ([].concat(arg).length === 1) {
+	                cloneState['style'] = {};
+	                this.setState(_helper.Utils.extend(cloneState, state));
+	            } else {
+	                _get(Renderer.prototype.__proto__ || Object.getPrototypeOf(Renderer.prototype), '_handleChange', this).call(this, state);
+	            }
+	        }
+	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            var _this6 = this;
 
+	            // console.log(document.getElementsByClassName('s-btn-circle')[0]);
+	            // console.log(document.getElementsByClassName('s-btn-circle')[0].style);
 	            _helper.EventCenter.bind('restartRenderer', function (module, preset) {
 	                _this6._handleChange({
 	                    module: module,
 	                    preset: preset
-	                });
+	                }, true);
 	            });
 	            _helper.EventCenter.bind('updateRenderer', function (attr, value) {
-	                _this6._handleChange({
-	                    style: _defineProperty({}, attr, value)
-	                });
+	                var newStyle = {
+	                    style: {}
+	                };
+	                switch (_this6.state.preset) {
+	                    case 'circle':
+	                        if (attr === 'size') {
+	                            newStyle.style['width'] = value + 'px';
+	                            newStyle.style['height'] = value + 'px';
+	                        } else if (attr === 'radius') {} else {
+	                            if (_jquery2.default.isNumeric(value)) {
+	                                newStyle.style[attr] = value + 'px';
+	                            } else {
+	                                newStyle.style[attr] = value;
+	                            }
+	                        }
+	                        break;
+	                    case 'square':
+	                        if (attr === 'size') {
+	                            newStyle.style['padding'] = value + ' ' + value * 2 + 'px';
+	                        } else if (attr === 'radius') {
+	                            newStyle.style['borderRadius'] = value + 'px';
+	                        } else {
+	                            if (_jquery2.default.isNumeric(value)) {
+	                                newStyle.style[attr] = value + 'px';
+	                            } else {
+	                                newStyle.style[attr] = value;
+	                            }
+	                        }
+	                        break;
+	                    default:
+	                        break;
+	                }
+	                _this6._handleChange(newStyle);
 	            });
 	        }
 	    }, {
@@ -323,7 +369,7 @@
 	            if (this.props.type === 'range') {
 	                onChange = function onChange(event) {
 	                    var value = event.target.value;
-	                    _helper.EventCenter.trigger('updateRenderer', _this9.props.attr, value + 'px');
+	                    _helper.EventCenter.trigger('updateRenderer', _this9.props.attr, value);
 	                    _this9._handleChange({
 	                        value: value
 	                    });
@@ -346,7 +392,7 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 's-box', 'data-msg': this.state.value },
-	                            _react2.default.createElement('input', { type: 'range', className: 's-range', value: this.state.value, onChange: onChange })
+	                            _react2.default.createElement('input', { type: 'range', className: 's-range', max: '200', value: this.state.value, onChange: onChange })
 	                        ),
 	                        _react2.default.createElement(
 	                            'div',
@@ -32108,23 +32154,44 @@
 	    modules: {
 	        button: {
 	            circle: {
-	                padding: {
-	                    value: 10,
+	                size: {
+	                    value: 100,
+	                    type: 'range'
+	                },
+	                fontSize: {
+	                    value: 18,
 	                    type: 'range'
 	                },
 	                color: {
-	                    value: '#999999',
+	                    value: '#FFFFFF',
 	                    type: "input"
+	                },
+
+	                background: {
+	                    value: '#40b572',
+	                    type: 'input'
 	                }
 	            },
 	            square: {
-	                padding: {
-	                    value: 20,
+	                size: {
+	                    value: 10,
+	                    type: 'range'
+	                },
+	                fontSize: {
+	                    value: 18,
+	                    type: 'range'
+	                },
+	                radius: {
+	                    value: 50,
 	                    type: 'range'
 	                },
 	                color: {
-	                    value: '#888888',
+	                    value: '#FFFFFF',
 	                    type: "input"
+	                },
+	                background: {
+	                    value: '#40b572',
+	                    type: 'input'
 	                }
 	            }
 	        },

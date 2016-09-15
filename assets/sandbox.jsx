@@ -84,19 +84,60 @@ class Renderer extends BaseComponent {
             style: {},
         };
     }
+    _handleChange (state, ...arg) {
+        let cloneState = this.state;
+        if ([...arg].length === 1) {
+            cloneState['style'] = {};
+            this.setState(Utils.extend(cloneState, state));
+        } else {
+            super._handleChange(state);
+        }
+    }
     componentDidMount () {
+        // console.log(document.getElementsByClassName('s-btn-circle')[0]);
+        // console.log(document.getElementsByClassName('s-btn-circle')[0].style);
         EventCenter.bind('restartRenderer', (module, preset) => {
             this._handleChange({
                 module: module,
-                preset: preset
-            });
+                preset: preset,
+            }, true);
         });
         EventCenter.bind('updateRenderer', (attr, value) => {
-            this._handleChange({
-                style: {
-                    [attr]: value
-                }
-            });
+            let newStyle = {
+                style: {}
+            };
+            switch (this.state.preset) {
+                case 'circle':
+                    if (attr === 'size') {
+                        newStyle.style['width'] = `${value}px`;
+                        newStyle.style['height'] = `${value}px`;
+                    } else if (attr === 'radius') {
+
+                    } else {
+                        if ($.isNumeric(value)) {
+                            newStyle.style[attr] = `${value}px`;
+                        } else {
+                            newStyle.style[attr] = value;
+                        }
+                    }
+                    break;
+                case 'square':
+                    if (attr === 'size') {
+                        newStyle.style['padding'] = `${value} ${value*2}px`;
+                    } else if (attr === 'radius') {
+                        newStyle.style['borderRadius'] = `${value}px`;
+                    } else {
+                        if ($.isNumeric(value)) {
+                            newStyle.style[attr] = `${value}px`;
+                        } else {
+                            newStyle.style[attr] = value;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            this._handleChange(newStyle);
         });
     }
     render () {
@@ -158,7 +199,7 @@ class Input extends BaseComponent {
         if (this.props.type === 'range') {
             onChange = (event) => {
                 let value = event.target.value;
-                EventCenter.trigger('updateRenderer', this.props.attr, `${value}px`);
+                EventCenter.trigger('updateRenderer', this.props.attr, value);
                 this._handleChange({
                     value: value
                 });
@@ -170,7 +211,7 @@ class Input extends BaseComponent {
                             <span className="s-txt">{this.props.attr}</span>
                         </div>
                         <div className="s-box" data-msg={this.state.value}>
-                            <input type="range" className='s-range' value={this.state.value} onChange={onChange} />
+                            <input type="range" className='s-range' max='200' value={this.state.value} onChange={onChange} />
                         </div>
                         <div className="s-box">
                             <span className="s-txt s-info">{this.props.attr}</span>
@@ -327,6 +368,9 @@ class Editor extends Draggable {
 document.onmousemove = (event) => {
     EventCenter.trigger('trackMouse', event.clientX, event.clientY);
 };
+
+
+
 
 
 

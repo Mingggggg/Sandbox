@@ -38,23 +38,44 @@ export let Config = {
     modules: {
         button: {
             circle: {
-                padding: {
-                    value: 10,
+                size: {
+                    value: 100,
+                    type: 'range'
+                },
+                fontSize: {
+                    value: 18,
                     type: 'range'
                 },
                 color: {
-                    value: '#999999',
+                    value: '#FFFFFF',
                     type: "input"
+                },
+
+                background: {
+                    value: '#40b572',
+                    type: 'input'
                 }
             },
             square: {
-                padding: {
-                    value: 20,
+                size: {
+                    value: 10,
+                    type: 'range'
+                },
+                fontSize: {
+                    value: 18,
+                    type: 'range'
+                },
+                radius: {
+                    value: 50,
                     type: 'range'
                 },
                 color: {
-                    value: '#888888',
+                    value: '#FFFFFF',
                     type: "input"
+                },
+                background: {
+                    value: '#40b572',
+                    type: 'input'
                 }
             }
         },
