@@ -24,6 +24,6 @@
     "gulp": "^3.9.1",
     "gulp-sass": "^2.3.2",
     "babel-loader": "^6.2.5",
-    "babel-preset-react": "^6.11.1",
+    "babel-preset-react": "^6.11.1"
   }
 }
