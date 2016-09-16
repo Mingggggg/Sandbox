@@ -5,12 +5,8 @@ body {
 }
 
 body, button, input {
-	// font-family: 'Quicksand', sans-serif;
-	// font-family: 'Ubuntu', sans-serif;
 	font-family: 'Montserrat', sans-serif;
 }
-
-
 
 // Mixins
 @mixin transit ($type) {
@@ -200,7 +196,7 @@ body, button, input {
         height: 0;
         border-left: 20px solid transparent;
         border-right: 20px solid transparent;
-        border-top: 20px solid #9090d5;
+        border-top: 20px solid #c47de8;
         left: 50%;
         transform: translateX(-50%);
         z-index: 10;
@@ -393,7 +389,8 @@ body, button, input {
     	// background: #303E63;
     	// background: #d8d89b;
     	// background: #4d5c84;
-        background: #9090d5;
+        // background: #9090d5;
+        background: #c47de8;
         border-radius: 10px 10px 0px 0px;
     	overflow: hidden;
         .s-drag {
@@ -430,7 +427,7 @@ body, button, input {
     position: relative;
     top: 36px;
     width: 84%;
-    margin: 0% 8%;
+    margin: 0% 6%;
     background: #ececec;
     box-shadow: 0px 0px 10px #c9c9c9;
     -webkit-user-select: none;
@@ -476,8 +473,7 @@ body, button, input {
         cursor: default;
         padding-bottom: 30px;
         .s-table {
-            width: 84%;
-            margin: 0% 8%;
+            margin: auto;
             text-align: center;
             color: #888888;
             font-weight: normal;
@@ -504,7 +500,7 @@ body, button, input {
                     padding: 6px 12px;
                     background: #b7b7b7;
                     color: white;
-                    margin-right: 20px;
+                    margin-left: 30px;
                     @include transit('fast');
                     vertical-align: middle;
                 }
@@ -544,33 +540,38 @@ body, button, input {
             }
             .s-tr-range {
                 @include range-slider;
-                td {
-                    text-align: center;
+                td:first-child {
+                    text-align: right;
                     .s-box {
-                        margin-right:15px;
-                    }
-                    // Name - small
-                    .s-box:first-child {
                         margin: 0 12px;
                         span {
-                            font-size: 12px;
+                            font-size: 14px;
                             vertical-align: middle;
                         }
                     }
-                    // Slider
-                    .s-box:nth-child(2):after {
+                }
+                td:nth-child(2) {
+                    .s-box:after {
                         @include popup('range');
                     }
-                    .s-box:nth-child(2):active:after {
+                    .s-box:active:after {
                         transform: translate3d(-50%,0,0);
                         opacity: 1;
                     }
-                    // Name - large
-                    .s-box:last-child {
+                }
+                td:last-child {
+                    text-align: left;
+                    .s-box {
                         span {
                             font-size: 20px;
                             vertical-align: middle;
                         }
+                    }
+                }
+                td {
+                    text-align: center;
+                    .s-box {
+                        margin-right:15px;
                     }
                 }
             }

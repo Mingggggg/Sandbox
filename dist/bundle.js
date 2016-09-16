@@ -225,8 +225,17 @@
 	        value: function componentDidMount() {
 	            var _this6 = this;
 
-	            // console.log(document.getElementsByClassName('s-btn-circle')[0]);
-	            // console.log(document.getElementsByClassName('s-btn-circle')[0].style);
+	            var styleSheet = document.styleSheets[1];
+	            var target = [];
+	            for (var i = 0; i < Object.keys(styleSheet.cssRules).length; i++) {
+	                if (styleSheet.cssRules[i].cssText.includes('.s-btn-circle')) {
+	                    target.push(styleSheet.cssRules[i].cssText);
+	                }
+	            }
+	            console.log(target);
+	            // let c = document.getElementsByClassName('s-btn-circle')[0];
+	            // console.log(window.getComputedStyle(c));
+	            // console.log(c.style);
 	            _helper.EventCenter.bind('restartRenderer', function (module, preset) {
 	                _this6._handleChange({
 	                    module: module,
@@ -379,7 +388,7 @@
 	                    { className: 's-tr-range' },
 	                    _react2.default.createElement(
 	                        'td',
-	                        { colSpan: '2' },
+	                        null,
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 's-box' },
@@ -388,12 +397,20 @@
 	                                { className: 's-txt' },
 	                                this.props.attr
 	                            )
-	                        ),
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 's-box', 'data-msg': this.state.value },
 	                            _react2.default.createElement('input', { type: 'range', className: 's-range', max: '200', value: this.state.value, onChange: onChange })
-	                        ),
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'td',
+	                        null,
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 's-box' },
@@ -418,7 +435,7 @@
 	                    { className: 's-tr-input' },
 	                    _react2.default.createElement(
 	                        'td',
-	                        { colSpan: '2' },
+	                        { colSpan: '3' },
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 's-box' },
@@ -587,7 +604,7 @@
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        'td',
-	                                        null,
+	                                        { colSpan: '2' },
 	                                        presets
 	                                    )
 	                                ),

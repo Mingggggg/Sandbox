@@ -66,7 +66,6 @@ class Draggable extends BaseComponent {
                         </div>
                     </div>
 				</div>
-
             </div>
         );
     }
@@ -94,8 +93,17 @@ class Renderer extends BaseComponent {
         }
     }
     componentDidMount () {
-        // console.log(document.getElementsByClassName('s-btn-circle')[0]);
-        // console.log(document.getElementsByClassName('s-btn-circle')[0].style);
+        var styleSheet = document.styleSheets[1];
+        let target = [];
+        for (let i = 0; i < Object.keys(styleSheet.cssRules).length; i++) {
+            if (styleSheet.cssRules[i].cssText.includes('.s-btn-circle')) {
+                target.push(styleSheet.cssRules[i].cssText);
+            }
+        }
+        console.log(target);
+        // let c = document.getElementsByClassName('s-btn-circle')[0];
+        // console.log(window.getComputedStyle(c));
+        // console.log(c.style);
         EventCenter.bind('restartRenderer', (module, preset) => {
             this._handleChange({
                 module: module,
@@ -206,13 +214,17 @@ class Input extends BaseComponent {
             };
             return (
                 <tr className="s-tr-range">
-                    <td colSpan="2">
+                    <td>
                         <div className="s-box">
                             <span className="s-txt">{this.props.attr}</span>
                         </div>
+                    </td>
+                    <td>
                         <div className="s-box" data-msg={this.state.value}>
                             <input type="range" className='s-range' max='200' value={this.state.value} onChange={onChange} />
                         </div>
+                    </td>
+                    <td>
                         <div className="s-box">
                             <span className="s-txt s-info">{this.props.attr}</span>
                         </div>
@@ -229,7 +241,7 @@ class Input extends BaseComponent {
             };
             return (
                 <tr className='s-tr-input'>
-                    <td colSpan="2">
+                    <td colSpan="3">
                         <div className="s-box">
                             <span className="s-txt s-info" data-msg='Wrapper for the element'>{this.props.attr}</span>
                         </div>
@@ -342,7 +354,7 @@ class Editor extends Draggable {
                                             <span className="s-txt s-ct s-info" data-msg='Wrapper for the element'>Presets</span>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td colSpan="2">
                                         {presets}
                                     </td>
                                 </tr>
@@ -362,17 +374,10 @@ class Editor extends Draggable {
     }
 }
 
-
-
 // Page Logic
 document.onmousemove = (event) => {
     EventCenter.trigger('trackMouse', event.clientX, event.clientY);
 };
-
-
-
-
-
 
 // Render
 ReactDOM.render(<Previewer id="previewer" />, document.getElementById('previewer-wrap'));
