@@ -346,7 +346,12 @@
 	            return _get(Previewer.prototype.__proto__ || Object.getPrototypeOf(Previewer.prototype), 'render', this).call(this, _react2.default.createElement(
 	                'div',
 	                { id: 'compile-source', className: 's-body' },
-	                _react2.default.createElement(Renderer, null)
+	                _react2.default.createElement(Renderer, null),
+	                _react2.default.createElement(
+	                    'button',
+	                    { id: 'compile', className: 's-btn' },
+	                    'COMPILE'
+	                )
 	            ));
 	        }
 	    }]);

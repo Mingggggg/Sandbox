@@ -167,6 +167,16 @@ body, button, input {
   bottom: 20px;
   font-size: 24px; }
 
+#compile {
+  position: absolute;
+  z-index: 15;
+  top: 0px;
+  left: 0px;
+  padding: 8px 16px;
+  background: purple;
+  border-radius: 0px 0px 10px 0px;
+  color: white; }
+
 .s-btn, .s-btn-circle, .s-btn-square {
   position: relative;
   border: 0;

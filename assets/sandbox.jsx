@@ -188,6 +188,9 @@ class Previewer extends Draggable {
         return super.render(
             <div id='compile-source' className='s-body'>
                 <Renderer />
+                <button id='compile' className="s-btn">
+                    COMPILE
+                </button>
             </div>
         );
     }
