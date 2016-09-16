@@ -134,7 +134,7 @@ body, button, input, pre {
   z-index: 10; }
   #editor .s-body {
     background: #E5E5E5; }
-  #editor .s-head:before {
+  #editor .s-head::before {
     content: "";
     position: absolute;
     top: 60px;
@@ -146,7 +146,7 @@ body, button, input, pre {
     left: 50%;
     transform: translateX(-50%);
     z-index: 10; }
-  #editor .s-bot:before {
+  #editor .s-bot::before {
     content: "";
     position: absolute;
     top: -12px;
@@ -231,7 +231,7 @@ body, button, input, pre {
     #editor-form .s-head .s-btn:active {
       -webkit-filter: none;
       filter: none; }
-  #editor-form .s-head:before {
+  #editor-form .s-head::before {
     display: none; }
   #editor-form .s-body {
     position: relative;
@@ -370,7 +370,8 @@ body, button, input, pre {
   z-index: 10; }
 
 #previewer .s-bot {
-  background: #43457f; }
+  left: -1px;
+  background: #44455f; }
 
 #previewer-compile {
   position: absolute;
@@ -384,7 +385,7 @@ body, button, input, pre {
   color: white; }
 
 #compile-source {
-  background: #43457f; }
+  background: #44455f; }
 
 .s-btn {
   position: relative;
@@ -407,7 +408,7 @@ body, button, input, pre {
   -webkit-filter: brightness(90%);
   filter: brightness(90%); }
 
-.s-dis:before {
+.s-dis::before {
   content: attr(data-msg);
   position: absolute;
   border-radius: 3px;
@@ -426,11 +427,11 @@ body, button, input, pre {
   bottom: -36px;
   background: #333333; }
 
-.s-dis:hover:before {
+.s-dis:hover::before {
   transform: translate3d(0, 0, 0);
   opacity: 1; }
 
-.s-info:before {
+.s-info::before {
   content: attr(data-msg);
   position: absolute;
   border-radius: 3px;
@@ -448,7 +449,7 @@ body, button, input, pre {
   display: none;
   background: #333333; }
 
-.s-info:hover:before {
+.s-info:hover::before {
   transform: translate3d(0, 0, 0);
   opacity: 1; }
 
@@ -470,7 +471,7 @@ body, button, input, pre {
     display: inline-block;
     vertical-align: middle; }
 
-.s-box:before {
+.s-box::before {
   content: '';
   display: inline-block;
   height: 100%;
@@ -524,7 +525,7 @@ body, button, input, pre {
   height: 150px;
   border-radius: 50%;
   color: #FFFFFF;
-  font-size: 100px;
+  font-size: 72px;
   background: #40b572; }
   .s-btn-circle .s-txt {
     position: absolute;
@@ -559,3 +560,22 @@ body, button, input, pre {
 .s-btn-square:active {
   -webkit-filter: brightness(90%);
   filter: brightness(90%); }
+
+.s-in-underline[type="text"] {
+  padding: 4px;
+  background: #848484;
+  border: none;
+  width: 80%;
+  font-size: 27px;
+  text-align: center;
+  color: #FFFFFF;
+  border-bottom: solid 3px #aaaaaa;
+  border-radius: 2px;
+  -webkit-transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  vertical-align: middle; }
+
+.s-in-underline[type="text"]:focus {
+  width: 100%;
+  outline: 0;
+  border-bottom-color: #b0b0b0; }

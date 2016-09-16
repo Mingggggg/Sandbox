@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from "jquery";
-import { EventCenter, Config, Utils } from '../assets/helper';
+import { EventCenter, Utils } from '../assets/helper';
+import { Config } from '../assets/config';
+
 
 class BaseComponent extends React.Component {
     _bind(...methods) {
@@ -104,25 +106,7 @@ class Renderer extends BaseComponent {
         });
     }
     render () {
-        let component, style, className;
-        switch (this.state.module) {
-            case 'button':
-                style = Utils.clone(this.state.style);
-                className = `s-btn-${this.state.preset}`;
-                component = (
-                    <button style={style} className={className}>button</button>
-                );
-                if (this.state.preset === 'circle') component = (
-                    <button style={style} className={className}>
-                        <span className="s-txt">button</span>
-                    </button>
-                );
-                break;
-            default:
-                component = (
-                    <span>Hi</span>
-                );
-        }
+        let component = moduleLoader(this.state);
         let wrapper = <div className='s-box'>{component}</div>;
         if (this.state.wrapper === 'row') wrapper = (
             <div className='s-row' data-render={`${this.state.wrapper} ${this.state.preset}`}>
@@ -186,7 +170,7 @@ class Previewer extends Draggable {
             <div id='compile-source' className='s-body'>
                 <Renderer />
                 <button id='previewer-compile' className="s-btn" onClick={compile}>
-                    COMPILE
+                    OUTPUT
                 </button>
             </div>, 'PREVIEWER'
         );
@@ -212,6 +196,8 @@ class Input extends BaseComponent {
                     value: value
                 });
             };
+            let max = this.props.max || 200;
+            let min = this.props.min || 0;
             return (
                 <tr className="s-tr-range">
                     <td>
@@ -221,7 +207,7 @@ class Input extends BaseComponent {
                     </td>
                     <td>
                         <div className="s-box" data-msg={this.state.value}>
-                            <input type="range" className='s-range' max='200' value={this.state.value} onChange={onChange} />
+                            <input type="range" className='s-range' max={max} min={min} value={this.state.value} onChange={onChange} />
                         </div>
                     </td>
                     <td>
@@ -326,8 +312,10 @@ class Editor extends Draggable {
         let inputs = Object.keys(settings).map((attr, index) => {
             let value = settings[attr].value;
             let type = settings[attr].type;
+            let min = settings[attr].min;
+            let max = settings[attr].max;
             return (
-                <Input type={type} attr={attr} value={value} key={index} />
+                <Input type={type} attr={attr} value={value} key={index} min={min} max={max} />
             );
         });
         return (
@@ -375,6 +363,38 @@ class Editor extends Draggable {
 }
 
 // Preset Handler
+let moduleLoader = (state) => {
+    let component, style, className;
+    switch (state.module) {
+        case 'button':
+            style = Utils.clone(state.style);
+            className = `s-btn-${state.preset}`;
+            component = (
+                <button style={style} className={className}>button</button>
+            );
+            if (state.preset === 'circle') component = (
+                <button style={style} className={className}>
+                    <span className="s-txt">button</span>
+                </button>
+            );
+            break;
+        case 'input':
+            style = Utils.clone(state.style);
+            className = `s-in-${state.preset}`;
+            component = (
+                <input style={style} type='text' className={className} placeholder="sandbox"></input>
+            );
+            if (state.preset === 'glow') component = (
+                <input style={style} type='text' className={className} placeholder="sandbox"></input>
+            );
+            break;
+        default:
+            component = (
+                <span>Hi</span>
+            );
+    }
+    return component;
+}
 let renderStyle = (preset, attr, value) => {
     let newStyle = {
         style: {}
@@ -399,6 +419,22 @@ let renderStyle = (preset, attr, value) => {
                 newStyle.style['borderRadius'] = `${value}px`;
             } else if (attr === 'padding') {
                 newStyle.style['padding'] = `${value}px ${value*2}px`;
+            } else {
+                if ($.isNumeric(value)) {
+                    newStyle.style[attr] = `${value}px`;
+                } else {
+                    newStyle.style[attr] = value;
+                }
+            }
+            break;
+        case 'underline':
+            if (attr === 'size') {
+                newStyle.style['fontSize'] = `${value}px`;
+                newStyle.style['borderBottomWidth'] = `${value/10}px`;
+            } else if (attr === 'underline') {
+                newStyle.style['borderBottomColor'] = `${value}`;
+            } else if (attr === 'width') {
+                newStyle.style['width'] = `${value}%`;
             } else {
                 if ($.isNumeric(value)) {
                     newStyle.style[attr] = `${value}px`;

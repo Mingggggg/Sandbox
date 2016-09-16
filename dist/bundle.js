@@ -64,6 +64,8 @@
 
 	var _helper = __webpack_require__(173);
 
+	var _config = __webpack_require__(174);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -197,10 +199,10 @@
 
 	        var _this5 = _possibleConstructorReturn(this, (Renderer.__proto__ || Object.getPrototypeOf(Renderer)).call(this));
 
-	        var modules = Object.keys(_helper.Config.modules);
+	        var modules = Object.keys(_config.Config.modules);
 	        _this5.state = {
 	            module: modules[0],
-	            preset: Object.keys(_helper.Config.modules[modules[0]])[0],
+	            preset: Object.keys(_config.Config.modules[modules[0]])[0],
 	            wrapper: 'row',
 	            style: {}
 	        };
@@ -241,35 +243,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var component = void 0,
-	                style = void 0,
-	                className = void 0;
-	            switch (this.state.module) {
-	                case 'button':
-	                    style = _helper.Utils.clone(this.state.style);
-	                    className = 's-btn-' + this.state.preset;
-	                    component = _react2.default.createElement(
-	                        'button',
-	                        { style: style, className: className },
-	                        'button'
-	                    );
-	                    if (this.state.preset === 'circle') component = _react2.default.createElement(
-	                        'button',
-	                        { style: style, className: className },
-	                        _react2.default.createElement(
-	                            'span',
-	                            { className: 's-txt' },
-	                            'button'
-	                        )
-	                    );
-	                    break;
-	                default:
-	                    component = _react2.default.createElement(
-	                        'span',
-	                        null,
-	                        'Hi'
-	                    );
-	            }
+	            var component = moduleLoader(this.state);
 	            var wrapper = _react2.default.createElement(
 	                'div',
 	                { className: 's-box' },
@@ -352,7 +326,7 @@
 	                _react2.default.createElement(
 	                    'button',
 	                    { id: 'previewer-compile', className: 's-btn', onClick: compile },
-	                    'COMPILE'
+	                    'OUTPUT'
 	                )
 	            ), 'PREVIEWER');
 	        }
@@ -390,6 +364,8 @@
 	                        value: value
 	                    });
 	                };
+	                var max = this.props.max || 200;
+	                var min = this.props.min || 0;
 	                return _react2.default.createElement(
 	                    'tr',
 	                    { className: 's-tr-range' },
@@ -412,7 +388,7 @@
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 's-box', 'data-msg': this.state.value },
-	                            _react2.default.createElement('input', { type: 'range', className: 's-range', max: '200', value: this.state.value, onChange: onChange })
+	                            _react2.default.createElement('input', { type: 'range', className: 's-range', max: max, min: min, value: this.state.value, onChange: onChange })
 	                        )
 	                    ),
 	                    _react2.default.createElement(
@@ -483,10 +459,10 @@
 	        var _this10 = _possibleConstructorReturn(this, (Editor.__proto__ || Object.getPrototypeOf(Editor)).call(this, props));
 
 	        _this10._bind('_compile', '_handleChange');
-	        var modules = Object.keys(_helper.Config.modules);
+	        var modules = Object.keys(_config.Config.modules);
 	        _this10.state = {
 	            module: modules[0],
-	            preset: Object.keys(_helper.Config.modules[modules[0]])[0]
+	            preset: Object.keys(_config.Config.modules[modules[0]])[0]
 	        };
 	        return _this10;
 	    }
@@ -497,10 +473,10 @@
 	            var _this11 = this;
 
 	            // Build components
-	            var components = Object.keys(_helper.Config.modules).map(function (module, index) {
+	            var components = Object.keys(_config.Config.modules).map(function (module, index) {
 	                var className = "s-btn s-ct";
 	                var switchModule = function switchModule() {
-	                    var preset = Object.keys(_helper.Config.modules[module])[0];
+	                    var preset = Object.keys(_config.Config.modules[module])[0];
 	                    _helper.EventCenter.trigger('restartRenderer', module, preset);
 	                    _this11._handleChange({
 	                        module: module,
@@ -529,7 +505,7 @@
 	                );
 	            });
 	            // Build Preset
-	            var presets = Object.keys(_helper.Config.modules[this.state.module]).map(function (preset, index) {
+	            var presets = Object.keys(_config.Config.modules[this.state.module]).map(function (preset, index) {
 	                var className = "s-btn s-ct s-info";
 	                var loadPreset = function loadPreset() {
 	                    _helper.EventCenter.trigger('restartRenderer', _this11.state.module, preset);
@@ -550,11 +526,13 @@
 	                );
 	            });
 	            // Build attribute inputs
-	            var settings = _helper.Config.modules[this.state.module][this.state.preset];
+	            var settings = _config.Config.modules[this.state.module][this.state.preset];
 	            var inputs = Object.keys(settings).map(function (attr, index) {
 	                var value = settings[attr].value;
 	                var type = settings[attr].type;
-	                return _react2.default.createElement(Input, { type: type, attr: attr, value: value, key: index });
+	                var min = settings[attr].min;
+	                var max = settings[attr].max;
+	                return _react2.default.createElement(Input, { type: type, attr: attr, value: value, key: index, min: min, max: max });
 	            });
 	            return _react2.default.createElement(
 	                'div',
@@ -636,6 +614,44 @@
 	// Preset Handler
 
 
+	var moduleLoader = function moduleLoader(state) {
+	    var component = void 0,
+	        style = void 0,
+	        className = void 0;
+	    switch (state.module) {
+	        case 'button':
+	            style = _helper.Utils.clone(state.style);
+	            className = 's-btn-' + state.preset;
+	            component = _react2.default.createElement(
+	                'button',
+	                { style: style, className: className },
+	                'button'
+	            );
+	            if (state.preset === 'circle') component = _react2.default.createElement(
+	                'button',
+	                { style: style, className: className },
+	                _react2.default.createElement(
+	                    'span',
+	                    { className: 's-txt' },
+	                    'button'
+	                )
+	            );
+	            break;
+	        case 'input':
+	            style = _helper.Utils.clone(state.style);
+	            className = 's-in-' + state.preset;
+	            component = _react2.default.createElement('input', { style: style, type: 'text', className: className, placeholder: 'sandbox' });
+	            if (state.preset === 'glow') component = _react2.default.createElement('input', { style: style, type: 'text', className: className, placeholder: 'sandbox' });
+	            break;
+	        default:
+	            component = _react2.default.createElement(
+	                'span',
+	                null,
+	                'Hi'
+	            );
+	    }
+	    return component;
+	};
 	var renderStyle = function renderStyle(preset, attr, value) {
 	    var newStyle = {
 	        style: {}
@@ -660,6 +676,22 @@
 	                newStyle.style['borderRadius'] = value + 'px';
 	            } else if (attr === 'padding') {
 	                newStyle.style['padding'] = value + 'px ' + value * 2 + 'px';
+	            } else {
+	                if (_jquery2.default.isNumeric(value)) {
+	                    newStyle.style[attr] = value + 'px';
+	                } else {
+	                    newStyle.style[attr] = value;
+	                }
+	            }
+	            break;
+	        case 'underline':
+	            if (attr === 'size') {
+	                newStyle.style['fontSize'] = value + 'px';
+	                newStyle.style['borderBottomWidth'] = value / 10 + 'px';
+	            } else if (attr === 'underline') {
+	                newStyle.style['borderBottomColor'] = '' + value;
+	            } else if (attr === 'width') {
+	                newStyle.style['width'] = value + '%';
 	            } else {
 	                if (_jquery2.default.isNumeric(value)) {
 	                    newStyle.style[attr] = value + 'px';
@@ -32153,7 +32185,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.Utils = exports.Config = exports.EventCenter = undefined;
+	exports.Utils = exports.EventCenter = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -32238,17 +32270,36 @@
 	};
 
 	var EventCenter = exports.EventCenter = new MicroEvent();
+	var Utils = exports.Utils = {
+	    clone: clone,
+	    extend: extend,
+	    escapeHTML: escapeHTML
+	};
+
+/***/ },
+/* 174 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	var Config = exports.Config = {
 	    modules: {
 	        button: {
 	            circle: {
 	                size: {
 	                    value: 150,
-	                    type: 'range'
+	                    type: 'range',
+	                    min: 50,
+	                    max: 300
 	                },
 	                fontSize: {
-	                    value: 100,
-	                    type: 'range'
+	                    value: 80,
+	                    type: 'range',
+	                    max: 72,
+	                    min: 16
 	                },
 	                color: {
 	                    value: '#FFFFFF',
@@ -32263,15 +32314,18 @@
 	            square: {
 	                size: {
 	                    value: 18,
-	                    type: 'range'
+	                    type: 'range',
+	                    max: 100
 	                },
 	                padding: {
 	                    value: 10,
-	                    type: 'range'
+	                    type: 'range',
+	                    max: 50
 	                },
 	                radius: {
 	                    value: 50,
-	                    type: 'range'
+	                    type: 'range',
+	                    max: 100
 	                },
 	                color: {
 	                    value: '#FFFFFF',
@@ -32285,13 +32339,29 @@
 	        },
 	        input: {
 	            underline: {
+	                size: {
+	                    value: 27,
+	                    type: 'range',
+	                    max: 40,
+	                    min: 20
+	                },
 	                padding: {
-	                    value: 10,
-	                    type: 'range'
+	                    value: 4,
+	                    type: 'range',
+	                    min: 2,
+	                    max: 12
 	                },
 	                color: {
-	                    value: '#999999',
+	                    value: '#FFFFFF',
 	                    type: "input"
+	                },
+	                underline: {
+	                    value: '#aaaaaa',
+	                    type: "input"
+	                },
+	                background: {
+	                    value: '#848484',
+	                    type: 'input'
 	                }
 	            },
 	            glow: {
@@ -32325,30 +32395,7 @@
 	                type: "input"
 	            }
 	        }
-	    },
-	    presets: {
-	        button: {
-	            circle: {
-	                borderRadius: '50%',
-	                width: "50px",
-	                paddingBottom: "50px"
-	            },
-	            square: {}
-	        },
-	        input: {
-	            underline: {
-	                borderRadius: '50%',
-	                width: "50px",
-	                paddingBottom: "50px"
-	            },
-	            glow: {}
-	        }
 	    }
-	};
-	var Utils = exports.Utils = {
-	    clone: clone,
-	    extend: extend,
-	    escapeHTML: escapeHTML
 	};
 
 /***/ }

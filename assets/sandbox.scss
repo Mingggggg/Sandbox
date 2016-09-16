@@ -1,3 +1,4 @@
+$previewer-bg: #44455f; // #43457f; #8ed7ae;
 // General style init
 body {
 	padding: 0;
@@ -262,7 +263,7 @@ body, button, input, pre {
     .s-body {
         background: #E5E5E5;
     }
-    .s-head:before {
+    .s-head::before {
     	content: "";
         position: absolute;
         top: 60px;
@@ -275,7 +276,7 @@ body, button, input, pre {
         transform: translateX(-50%);
         z-index: 10;
     }
-    .s-bot:before {
+    .s-bot::before {
         content: "";
         position: absolute;
         top: -12px;
@@ -375,7 +376,7 @@ body, button, input, pre {
             filter: none;
         }
     }
-    .s-head:before {
+    .s-head::before {
         display: none;
     }
     .s-body {
@@ -509,7 +510,9 @@ body, button, input, pre {
 
 #previewer .s-bot {
     // background: #8ed7ae;
-    background: #43457f;
+    // background: #43457f;
+    left: -1px;
+    background: $previewer-bg;
 }
 
 #previewer-compile {
@@ -526,14 +529,12 @@ body, button, input, pre {
 }
 
 #compile-source {
-    background: #43457f;
+    background: $previewer-bg;
 }
 
 // ---------- Previwer style ends -------------
 
-
 // Basic style
-
 .s-btn {
 	position:relative;
 	border: 0;
@@ -559,20 +560,20 @@ body, button, input, pre {
     filter: brightness(90%);
 }
 
-.s-dis:before {
+.s-dis::before {
     @include popup('disabled');
 }
 
-.s-dis:hover:before {
+.s-dis:hover::before {
     transform: translate3d(0,0,0);
     opacity: 1;
 }
 
-.s-info:before {
+.s-info::before {
     @include popup('info');
 }
 
-.s-info:hover:before {
+.s-info:hover::before {
     transform: translate3d(0,0,0);
     opacity: 1;
 }
@@ -600,7 +601,7 @@ body, button, input, pre {
     }
 }
 
-.s-box:before {
+.s-box::before {
 	content: '';
 	display: inline-block;
 	height: 100%;
@@ -651,8 +652,6 @@ body, button, input, pre {
     margin: 0 20%;
 }
 
-
-
 .s-watermark {
 	color: #717171;
     opacity: 0.1;
@@ -671,7 +670,7 @@ body, button, input, pre {
     height: 150px;
     border-radius: 50%;
     color: #FFFFFF;
-    font-size: 100px;
+    font-size: 72px;
 	background: #40b572;
     .s-txt {
         position: absolute;
@@ -712,4 +711,23 @@ body, button, input, pre {
 .s-btn-square:active {
     -webkit-filter: brightness(90%);
     filter: brightness(90%);
+}
+
+.s-in-underline[type="text"] {
+    padding: 4px;
+    background: #848484;
+    border: none;
+    width: 80%;
+    font-size: 27px;
+    text-align: center;
+    color: #FFFFFF;
+    border-bottom: solid 3px #aaaaaa;
+    border-radius: 2px;
+    @include transit('fast');
+    vertical-align: middle;
+}
+.s-in-underline[type="text"]:focus {
+    width: 100%;
+    outline: 0;
+    border-bottom-color: #b0b0b0;
 }
