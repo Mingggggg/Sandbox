@@ -42,7 +42,7 @@ class Draggable extends BaseComponent {
             });
         });
     }
-    render (body) {
+    render (body, name) {
         let style = {};
         if (this.state !== {}) {
             style = {
@@ -54,9 +54,9 @@ class Draggable extends BaseComponent {
             <div style={style} id={this.props.id}>
                 <div className="s-window" ref='window'>
 					<div className="s-row s-head">
-						<div className="s-box s-rt">
+						<div className="s-box s-ct">
 							<button className="s-btn s-drag s-ct">
-								DRAG
+								{name}
 							</button>
 						</div>
 					</div>
@@ -93,17 +93,6 @@ class Renderer extends BaseComponent {
         }
     }
     componentDidMount () {
-        var styleSheet = document.styleSheets[1];
-        let target = [];
-        for (let i = 0; i < Object.keys(styleSheet.cssRules).length; i++) {
-            if (styleSheet.cssRules[i].cssText.includes('.s-btn-circle')) {
-                target.push(styleSheet.cssRules[i].cssText);
-            }
-        }
-        console.log(target);
-        // let c = document.getElementsByClassName('s-btn-circle')[0];
-        // console.log(window.getComputedStyle(c));
-        // console.log(c.style);
         EventCenter.bind('restartRenderer', (module, preset) => {
             this._handleChange({
                 module: module,
@@ -131,9 +120,11 @@ class Renderer extends BaseComponent {
                     break;
                 case 'square':
                     if (attr === 'size') {
-                        newStyle.style['padding'] = `${value} ${value*2}px`;
+                        newStyle.style['fontSize'] = `${value}`;
                     } else if (attr === 'radius') {
                         newStyle.style['borderRadius'] = `${value}px`;
+                    } else if (attr === 'padding') {
+                        newStyle.style['padding'] = `${value} ${value*2}px`;
                     } else {
                         if ($.isNumeric(value)) {
                             newStyle.style[attr] = `${value}px`;
@@ -185,13 +176,50 @@ class Previewer extends Draggable {
         super(props);
     }
     render () {
+        var compile = () => {
+            // var raw_html = $('#drop_base').html();
+            var styleSheet = document.styleSheets[1];
+            let target = [];
+            for (let i = 0; i < Object.keys(styleSheet.cssRules).length; i++) {
+                if (styleSheet.cssRules[i].cssText.includes('.s-btn-circle')) {
+                    target.push(styleSheet.cssRules[i].cssText);
+                }
+            }
+            var element = document.querySelector('.s-btn-circle');
+            $.ajax({
+                url : '/beautify',
+                type : 'POST',
+                data : JSON.stringify({
+                    html: element.outerHTML,
+                    css: target.join(' ')
+                }),
+                dataType: 'text',
+                success: function(data) {
+                    let compiled = JSON.parse(data);
+                    $('#body-html').html(Utils.escapeHTML(compiled.html));
+                    $('#head-css').html(compiled.css);
+                },
+            });
+            // Fill the value
+
+            // Open modal
+            $('#compile-modal').css({
+                    opacity: 1,
+                    visibility: 'visible'
+            });
+            $('#compile-modal .s-modal').css({
+                    transform: 'translate3d(-50%, -50%, 0)'
+            });
+            console.log(target);
+            console.log(element);
+        }
         return super.render(
             <div id='compile-source' className='s-body'>
                 <Renderer />
-                <button id='compile' className="s-btn">
+                <button id='previewer-compile' className="s-btn" onClick={compile}>
                     COMPILE
                 </button>
-            </div>
+            </div>, 'PREVIEWER'
         );
     }
 }
@@ -342,7 +370,7 @@ class Editor extends Draggable {
                         </tr>
                     </tbody>
                 </table>
-                <div className="s-form">
+                <div id='editor-form'>
                     <div className='s-head'>
                         <button className="s-btn s-ct">
                             {this.state.module}
@@ -372,7 +400,7 @@ class Editor extends Draggable {
     render () {
         this._body = this._compile();
         return super.render(
-            this._body
+            this._body, 'EDITOR'
         );
     }
 }
@@ -380,6 +408,16 @@ class Editor extends Draggable {
 // Page Logic
 document.onmousemove = (event) => {
     EventCenter.trigger('trackMouse', event.clientX, event.clientY);
+};
+
+window['compileModalClose'] = () => {
+    $('#compile-modal').css({
+            opacity: 0,
+            visibility: 'hidden'
+    });
+    $('#compile-modal .s-modal').css({
+            transform: 'translate3d(-50%, -40%, 0)'
+    });
 };
 
 // Render

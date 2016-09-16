@@ -32,6 +32,21 @@ const extend = function (prev, next) {
     return clone($.extend(true, prev, next));
 };
 
+let entityMap = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': '&quot;',
+  "'": '&#39;',
+  "/": '&#x2F;'
+};
+
+const escapeHTML = function (string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+        return entityMap[s];
+    });
+};
+
 
 export let EventCenter = new MicroEvent();
 export let Config = {
@@ -39,11 +54,11 @@ export let Config = {
         button: {
             circle: {
                 size: {
-                    value: 100,
+                    value: 150,
                     type: 'range'
                 },
                 fontSize: {
-                    value: 18,
+                    value: 100,
                     type: 'range'
                 },
                 color: {
@@ -58,11 +73,11 @@ export let Config = {
             },
             square: {
                 size: {
-                    value: 10,
+                    value: 18,
                     type: 'range'
                 },
-                fontSize: {
-                    value: 18,
+                padding: {
+                    value: 10,
                     type: 'range'
                 },
                 radius: {
@@ -147,5 +162,6 @@ export let Config = {
 };
 export let Utils = {
     clone: clone,
-    extend: extend
+    extend: extend,
+    escapeHTML: escapeHTML,
 }

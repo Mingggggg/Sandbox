@@ -4,7 +4,7 @@ body {
 	margin: 0;
 }
 
-body, button, input {
+body, button, input, pre {
 	font-family: 'Montserrat', sans-serif;
 }
 
@@ -96,6 +96,53 @@ body, button, input {
     }
 }
 
+@mixin modal-content {
+    .s-modal {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate3d(-50%, -40%, 0);
+        display: inline-block;
+        padding: 8px 18px;
+        background: #f76464;
+        border-radius: 10px;
+        @include transit('swift');
+        .s-row {
+            height: 50px;
+            .s-btn {
+                font-weight:bold;
+                font-size:28px;
+                color: white;
+            }
+            .s-btn:hover {
+                cursor: pointer;
+            }
+        }
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+            th {
+                color: white;
+            }
+            // #body-html {
+            //     border-right: 3px solid white;
+            // }
+            td {
+                text-align: center;
+                min-width: 300px;
+                min-height: 400px;
+            }
+            pre {
+                color: white;
+                text-align: initial;
+                display: inline-block;
+                font-size: 14px;
+
+            }
+        }
+    }
+}
+
 // Object-specific styles
 #view-wrap {
 	position: relative;
@@ -146,6 +193,7 @@ body, button, input {
 }
 
 #home-helper {
+    right: 5px;
 	width: 36px;
 	height: 36px;
 	border-radius: 50%;
@@ -153,14 +201,6 @@ body, button, input {
 	color: rgba(255,255,255,1);
 	background: rgba(0,0,0,0.2);
 	opacity: 1;
-}
-
-#home-compile {
-	border-radius: 50px;
-	padding: 8px 20px;
-	font-size: 18px;
-	color: #FFFFFF;
-	background: #40b572;
 }
 
 #home-login {
@@ -172,12 +212,42 @@ body, button, input {
 	background: #40b572;
 }
 
+#home-brand {
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
+	font-size: 120px;
+}
+
+#home-author {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+	font-size: 24px;
+}
+
+// Module: Workspace
 #workspace {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
 }
 
+// Modals
+#compile-modal {
+    position: fixed;
+    top: 0;
+    z-index: 20;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(123, 140, 115, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    @include transit('fast');
+    @include modal-content;
+}
+
+// ---------- Editor style starts -------------
 #editor {
 	position: absolute;
 	top: 10%;
@@ -239,8 +309,6 @@ body, button, input {
     }
 }
 
-
-
 #editor-module {
     margin-top: 20px;
     height: 30px;
@@ -267,7 +335,165 @@ body, button, input {
     }
 }
 
+#editor-form {
+    position: relative;
+    top: 36px;
+    width: 84%;
+    margin: 0% 6%;
+    background: #ececec;
+    box-shadow: 0px 0px 10px #c9c9c9;
+    -webkit-user-select: none;
+    user-select: none;
+    .s-head {
+        // background: #e6e6e6;
+        background: #a1debb;
+        height: 30px;
+        border-radius: 0;
+        .s-btn {
+            position: absolute;
+            border-radius: 5px;
+            top: 0%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            font-size: 1.5vw;
+            color: #999999;
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0px 0px 10px #d3d3d3;
+            z-index: 10;
+            background: #e9e9e9;
+        }
+        .s-btn:hover {
+            background: #f2f2f2;
+        }
+        .s-btn:active {
+            -webkit-filter: none;
+            filter: none;
+        }
+    }
+    .s-head:before {
+        display: none;
+    }
+    .s-body {
+        position: relative;
+        top: 0px;
+        border-radius: 5px;
+        z-index: 5;
+        width: 100%;
+        background: #ececec;
+        overflow: visible;
+        cursor: default;
+        padding-bottom: 30px;
+        .s-table {
+            margin: auto;
+            text-align: center;
+            color: #888888;
+            font-weight: normal;
+            tr {
+                height: 40px;
+            }
+            tr:first-child {
+                height: 60px;
+            }
+            // Preset / Wrapper
+            .s-tr-btn {
+                td:first-child {
+                    width: 40%;
+                    border-bottom: 2px dashed #c3c3c3;
+                    font-size: 18px;
+                }
+                td:last-child {
+                    text-align: center;
+                    border-bottom: 2px dashed #c3c3c3;
+                }
+                .s-btn {
+                    border-radius: 5px;
+                    padding: 6px 12px;
+                    background: #b7b7b7;
+                    color: white;
+                    margin-left: 30px;
+                    @include transit('fast');
+                    vertical-align: middle;
+                }
+                .s-btn:not(.active):hover {
+                    background: #5e5e5e;
+                }
+                .active {
+                    background: #4e4e4e;
+                }
+            }
+            // Input Area
+            .s-tr-input {
+                .s-box {
+                    margin-right: 60px;
+                    .s-txt {
+                        vertical-align: middle;
+                        font-size: 18px;
+                    }
+                }
+                .s-input[type="text"] {
+                    padding: 4px;
+                    background: #ececec;
+                    border: none;
+                    width: 32%;
+                    text-align: center;
+                    color: #888888;
+                    border-bottom: solid 2px #c5c5c5;
+                    border-radius: 2px;
+                    @include transit('fast');
+                    vertical-align: middle;
+                }
+                .s-input[type="text"]:focus {
+                    width: 40%;
+                    outline: 0;
+                    border-bottom: solid 2px #b0b0b0;
+                }
+            }
+            // Range-slider styling
+            .s-tr-range {
+                @include range-slider;
+                td:first-child {
+                    text-align: right;
+                    .s-box {
+                        margin: 0 12px;
+                        span {
+                            font-size: 14px;
+                            vertical-align: middle;
+                        }
+                    }
+                }
+                td:nth-child(2) {
+                    .s-box:after {
+                        @include popup('range');
+                    }
+                    .s-box:active:after {
+                        transform: translate3d(-50%,0,0);
+                        opacity: 1;
+                    }
+                }
+                td:last-child {
+                    text-align: left;
+                    .s-box {
+                        span {
+                            font-size: 20px;
+                            vertical-align: middle;
+                        }
+                    }
+                }
+                td {
+                    text-align: center;
+                    .s-box {
+                        margin-right:15px;
+                    }
+                }
+            }
+        }
+    }
+}
 
+// ---------- Editor style ends -------------
+
+// ---------- Previewer style starts -------------
 #previewer {
 	position: absolute;
 	top: 20%;
@@ -278,33 +504,29 @@ body, button, input {
 }
 
 #previewer .s-bot {
-    background: #8ed7ae;
+    // background: #8ed7ae;
+    background: #43457f;
 }
 
-#home-brand {
-	position: absolute;
-	left: 20px;
-	bottom: 20px;
-	font-size: 120px;
-}
-
-#home-author {
-	position: absolute;
-	right: 20px;
-	bottom: 20px;
-	font-size: 24px;
-}
-
-#compile {
+#previewer-compile {
     position: absolute;
     z-index: 15;
     top: 0px;
     left: 0px;
     padding: 8px 16px;
-    background: purple;
+    // background: purple;
+    font-size: 18px;
+    background: #8ed7ae;
     border-radius: 0px 0px 10px 0px;
     color: white;
 }
+
+#compile-source {
+    background: #43457f;
+}
+
+// ---------- Previwer style ends -------------
+
 
 // Basic style
 
@@ -332,15 +554,6 @@ body, button, input {
     -webkit-filter: brightness(90%);
     filter: brightness(90%);
 }
-
-
-
-// .s-dis {
-// 	// -webkit-filter: opacity(0.5);
-//     // filter: opacity(0.5);
-//     -webkit-filter: sepia(1);
-//   	filter: sepia(1);
-// }
 
 .s-dis:before {
     @include popup('disabled');
@@ -434,161 +647,7 @@ body, button, input {
     margin: 0 20%;
 }
 
-.s-form {
-    position: relative;
-    top: 36px;
-    width: 84%;
-    margin: 0% 6%;
-    background: #ececec;
-    box-shadow: 0px 0px 10px #c9c9c9;
-    -webkit-user-select: none;
-    user-select: none;
-    .s-head {
-        // background: #e6e6e6;
-        background: #a1debb;
-        height: 30px;
-        border-radius: 0;
-        .s-btn {
-            position: absolute;
-            border-radius: 5px;
-            top: 0%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-50%);
-            font-size: 1.5vw;
-            color: #999999;
-            padding: 8px 16px;
-            border-radius: 20px;
-            box-shadow: 0px 0px 10px #d3d3d3;
-            z-index: 10;
-            background: #e9e9e9;
-        }
-        .s-btn:hover {
-            background: #f2f2f2;
-        }
-        .s-btn:active {
-            -webkit-filter: none;
-            filter: none;
-        }
-    }
-    .s-head:before {
-        display: none;
-    }
-    .s-body {
-        position: relative;
-        top: 0px;
-        border-radius: 5px;
-        z-index: 5;
-        width: 100%;
-        background: #ececec;
-        overflow: visible;
-        cursor: default;
-        padding-bottom: 30px;
-        .s-table {
-            margin: auto;
-            text-align: center;
-            color: #888888;
-            font-weight: normal;
-            tr {
-                height: 40px;
-            }
-            tr:first-child {
-                height: 60px;
-            }
-            .s-tr-btn {
-                // Name
-                td:first-child {
-                    width: 40%;
-                    border-bottom: 2px dashed #c3c3c3;
-                    font-size: 18px;
-                }
-                // Wrapper for two btns
-                td:last-child {
-                    text-align: center;
-                    border-bottom: 2px dashed #c3c3c3;
-                }
-                .s-btn {
-                    border-radius: 5px;
-                    padding: 6px 12px;
-                    background: #b7b7b7;
-                    color: white;
-                    margin-left: 30px;
-                    @include transit('fast');
-                    vertical-align: middle;
-                }
-                .s-btn:not(.active):hover {
-                    background: #5e5e5e;
-                }
-                .active {
-                    background: #4e4e4e;
-                }
 
-            }
-            .s-tr-input {
-                .s-box {
-                    margin-right: 60px;
-                    .s-txt {
-                        vertical-align: middle;
-                        font-size: 18px;
-                    }
-                }
-                .s-input[type="text"] {
-                    padding: 4px;
-                    background: #ececec;
-                    border: none;
-                    width: 32%;
-                    text-align: center;
-                    color: #888888;
-                    border-bottom: solid 2px #c5c5c5;
-                    border-radius: 2px;
-                    @include transit('fast');
-                    vertical-align: middle;
-                }
-                .s-input[type="text"]:focus {
-                    width: 40%;
-                    outline: 0;
-                    border-bottom: solid 2px #b0b0b0;
-                }
-            }
-            .s-tr-range {
-                @include range-slider;
-                td:first-child {
-                    text-align: right;
-                    .s-box {
-                        margin: 0 12px;
-                        span {
-                            font-size: 14px;
-                            vertical-align: middle;
-                        }
-                    }
-                }
-                td:nth-child(2) {
-                    .s-box:after {
-                        @include popup('range');
-                    }
-                    .s-box:active:after {
-                        transform: translate3d(-50%,0,0);
-                        opacity: 1;
-                    }
-                }
-                td:last-child {
-                    text-align: left;
-                    .s-box {
-                        span {
-                            font-size: 20px;
-                            vertical-align: middle;
-                        }
-                    }
-                }
-                td {
-                    text-align: center;
-                    .s-box {
-                        margin-right:15px;
-                    }
-                }
-            }
-        }
-    }
-}
 
 .s-watermark {
 	color: #717171;
@@ -599,20 +658,62 @@ body, button, input {
 
 // Output components
 .s-btn-circle {
-    @extend .s-btn;
-    width: 100px;
-    height: 100px;
+    position:relative;
+    border: 0;
+    box-shadow: 0;
+    background: transparent;
+    vertical-align: middle;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     color: #FFFFFF;
-    font-size: 18px;
+    font-size: 100px;
 	background: #40b572;
+    .s-txt {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translateY(-50%) translateX(-50%);
+        -moz-transform: translateY(-50%) translateX(-50%);
+        transform: translateY(-50%) translateX(-50%);
+    }
+}
+
+.s-btn-circle:focus {
+	outline: 0;
+}
+
+.s-btn-circle:active {
+    -webkit-filter: brightness(90%);
+    filter: brightness(90%);
 }
 
 .s-btn-square {
-    @extend .s-btn;
+    position:relative;
+    border: 0;
+    box-shadow: 0;
+    background: transparent;
+    vertical-align: middle;
 	border-radius: 50px;
 	padding: 10px 20px;
 	font-size: 18px;
 	color: #FFFFFF;
 	background: #40b572;
+    .s-txt {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translateY(-50%) translateX(-50%);
+        -moz-transform: translateY(-50%) translateX(-50%);
+        transform: translateY(-50%) translateX(-50%);
+    }
+}
+
+.s-btn-square:focus {
+	outline: 0;
+}
+
+.s-btn-square:active {
+    -webkit-filter: brightness(90%);
+    filter: brightness(90%);
 }

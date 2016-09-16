@@ -2,10 +2,11 @@
 
 > A real-time component building tool intended to provides pure css solution to frontend needs.
 
-This is the very first implementation of UI only. React logic will be implemented in the forthcoming versions.
+This is the implementation of framework only. More contents are coming.
 
 ## Getting Started
 
+* Customize your workspace by dragging the editors around
 * Build your own component from the presets
 * Compile it to code and throw it into your project
 
@@ -13,7 +14,6 @@ This is the very first implementation of UI only. React logic will be implemente
 
 ## Upcoming Features
 
-* Customizable workspace
 * Support for more components
 * Public component store
 * Private account and component inventory
@@ -23,7 +23,7 @@ This is the very first implementation of UI only. React logic will be implemente
 * React.js
 * Express.js
 * Sass
-* Little snippets of JQuery
+* Snippets of JQuery
 * Gulp.js
 * Babel
 * Webpack
@@ -42,4 +42,5 @@ This is the very first implementation of UI only. React logic will be implemente
 
 ## Acknowledgments
 
-* Still, my despiration to nail an internship
+* [js-beautify](https://www.npmjs.com/package/js-beautify) for rendering pretty dom and css
+* My despiration to nail an internship

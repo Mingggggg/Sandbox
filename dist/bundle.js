@@ -145,7 +145,7 @@
 	        }
 	    }, {
 	        key: 'render',
-	        value: function render(body) {
+	        value: function render(body, name) {
 	            var style = {};
 	            if (this.state !== {}) {
 	                style = {
@@ -164,11 +164,11 @@
 	                        { className: 's-row s-head' },
 	                        _react2.default.createElement(
 	                            'div',
-	                            { className: 's-box s-rt' },
+	                            { className: 's-box s-ct' },
 	                            _react2.default.createElement(
 	                                'button',
 	                                { className: 's-btn s-drag s-ct' },
-	                                'DRAG'
+	                                name
 	                            )
 	                        )
 	                    ),
@@ -225,17 +225,6 @@
 	        value: function componentDidMount() {
 	            var _this6 = this;
 
-	            var styleSheet = document.styleSheets[1];
-	            var target = [];
-	            for (var i = 0; i < Object.keys(styleSheet.cssRules).length; i++) {
-	                if (styleSheet.cssRules[i].cssText.includes('.s-btn-circle')) {
-	                    target.push(styleSheet.cssRules[i].cssText);
-	                }
-	            }
-	            console.log(target);
-	            // let c = document.getElementsByClassName('s-btn-circle')[0];
-	            // console.log(window.getComputedStyle(c));
-	            // console.log(c.style);
 	            _helper.EventCenter.bind('restartRenderer', function (module, preset) {
 	                _this6._handleChange({
 	                    module: module,
@@ -261,9 +250,11 @@
 	                        break;
 	                    case 'square':
 	                        if (attr === 'size') {
-	                            newStyle.style['padding'] = value + ' ' + value * 2 + 'px';
+	                            newStyle.style['fontSize'] = '' + value;
 	                        } else if (attr === 'radius') {
 	                            newStyle.style['borderRadius'] = value + 'px';
+	                        } else if (attr === 'padding') {
+	                            newStyle.style['padding'] = value + ' ' + value * 2 + 'px';
 	                        } else {
 	                            if (_jquery2.default.isNumeric(value)) {
 	                                newStyle.style[attr] = value + 'px';
@@ -343,16 +334,53 @@
 	    _createClass(Previewer, [{
 	        key: 'render',
 	        value: function render() {
+	            var compile = function compile() {
+	                // var raw_html = $('#drop_base').html();
+	                var styleSheet = document.styleSheets[1];
+	                var target = [];
+	                for (var i = 0; i < Object.keys(styleSheet.cssRules).length; i++) {
+	                    if (styleSheet.cssRules[i].cssText.includes('.s-btn-circle')) {
+	                        target.push(styleSheet.cssRules[i].cssText);
+	                    }
+	                }
+	                var element = document.querySelector('.s-btn-circle');
+	                _jquery2.default.ajax({
+	                    url: '/beautify',
+	                    type: 'POST',
+	                    data: JSON.stringify({
+	                        html: element.outerHTML,
+	                        css: target.join(' ')
+	                    }),
+	                    dataType: 'text',
+	                    success: function success(data) {
+	                        var compiled = JSON.parse(data);
+	                        (0, _jquery2.default)('#body-html').html(_helper.Utils.escapeHTML(compiled.html));
+	                        (0, _jquery2.default)('#head-css').html(compiled.css);
+	                    }
+	                });
+	                // Fill the value
+
+	                // Open modal
+	                (0, _jquery2.default)('#compile-modal').css({
+	                    opacity: 1,
+	                    visibility: 'visible'
+	                });
+	                (0, _jquery2.default)('#compile-modal .s-modal').css({
+	                    transform: 'translate3d(-50%, -50%, 0)'
+	                });
+	                console.log(target);
+	                console.log(element);
+	            };
 	            return _get(Previewer.prototype.__proto__ || Object.getPrototypeOf(Previewer.prototype), 'render', this).call(this, _react2.default.createElement(
 	                'div',
 	                { id: 'compile-source', className: 's-body' },
 	                _react2.default.createElement(Renderer, null),
 	                _react2.default.createElement(
 	                    'button',
-	                    { id: 'compile', className: 's-btn' },
+	                    { id: 'previewer-compile', className: 's-btn', onClick: compile },
 	                    'COMPILE'
 	                )
-	            ));
+	            ), 'PREVIEWER');
 	        }
 	    }]);
 
@@ -572,7 +600,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 's-form' },
+	                    { id: 'editor-form' },
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 's-head' },
@@ -624,7 +652,7 @@
 	        key: 'render',
 	        value: function render() {
 	            this._body = this._compile();
-	            return _get(Editor.prototype.__proto__ || Object.getPrototypeOf(Editor.prototype), 'render', this).call(this, this._body);
+	            return _get(Editor.prototype.__proto__ || Object.getPrototypeOf(Editor.prototype), 'render', this).call(this, this._body, 'EDITOR');
 	        }
 	    }]);
 
@@ -636,6 +664,16 @@
 
 	document.onmousemove = function (event) {
 	    _helper.EventCenter.trigger('trackMouse', event.clientX, event.clientY);
+	};
+
+	window['compileModalClose'] = function () {
+	    (0, _jquery2.default)('#compile-modal').css({
+	        opacity: 0,
+	        visibility: 'hidden'
+	    });
+	    (0, _jquery2.default)('#compile-modal .s-modal').css({
+	        transform: 'translate3d(-50%, -40%, 0)'
+	    });
 	};
 
 	// Render
@@ -32097,7 +32135,7 @@
 /* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -32122,19 +32160,19 @@
 	    }
 
 	    _createClass(MicroEvent, [{
-	        key: 'bind',
+	        key: "bind",
 	        value: function bind(event, fct) {
 	            this._events[event] = this._events[event] || [];
 	            this._events[event].push(fct);
 	        }
 	    }, {
-	        key: 'unbind',
+	        key: "unbind",
 	        value: function unbind(event) {
 	            if (!this._events[event]) return;
 	            this._events[event] = [];
 	        }
 	    }, {
-	        key: 'trigger',
+	        key: "trigger",
 	        value: function trigger(event) {
 	            if (!this._events[event] || this._events[event] === []) return;
 
@@ -32149,7 +32187,7 @@
 	            }
 	        }
 	    }, {
-	        key: 'once',
+	        key: "once",
 	        value: function once(event) {
 	            for (var _len2 = arguments.length, arg = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
 	                arg[_key2 - 1] = arguments[_key2];
@@ -32171,17 +32209,32 @@
 	    return clone(_jquery2.default.extend(true, prev, next));
 	};
 
+	var entityMap = {
+	    "&": "&amp;",
+	    "<": "&lt;",
+	    ">": "&gt;",
+	    '"': '&quot;',
+	    "'": '&#39;',
+	    "/": '&#x2F;'
+	};
+
+	var escapeHTML = function escapeHTML(string) {
+	    return String(string).replace(/[&<>"'\/]/g, function (s) {
+	        return entityMap[s];
+	    });
+	};
+
 	var EventCenter = exports.EventCenter = new MicroEvent();
 	var Config = exports.Config = {
 	    modules: {
 	        button: {
 	            circle: {
 	                size: {
-	                    value: 100,
+	                    value: 150,
 	                    type: 'range'
 	                },
 	                fontSize: {
-	                    value: 18,
+	                    value: 100,
 	                    type: 'range'
 	                },
 	                color: {
@@ -32196,11 +32249,11 @@
 	            },
 	            square: {
 	                size: {
-	                    value: 10,
+	                    value: 18,
 	                    type: 'range'
 	                },
-	                fontSize: {
-	                    value: 18,
+	                padding: {
+	                    value: 10,
 	                    type: 'range'
 	                },
 	                radius: {
@@ -32281,7 +32334,8 @@
 	};
 	var Utils = exports.Utils = {
 	    clone: clone,
-	    extend: extend
+	    extend: extend,
+	    escapeHTML: escapeHTML
 	};
 
 /***/ }
