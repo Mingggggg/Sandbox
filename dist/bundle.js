@@ -186,6 +186,9 @@
 	    return Draggable;
 	}(BaseComponent);
 
+	// Preset specific
+
+
 	var Renderer = function (_BaseComponent2) {
 	    _inherits(Renderer, _BaseComponent2);
 
@@ -232,41 +235,7 @@
 	                }, true);
 	            });
 	            _helper.EventCenter.bind('updateRenderer', function (attr, value) {
-	                var newStyle = {
-	                    style: {}
-	                };
-	                switch (_this6.state.preset) {
-	                    case 'circle':
-	                        if (attr === 'size') {
-	                            newStyle.style['width'] = value + 'px';
-	                            newStyle.style['height'] = value + 'px';
-	                        } else if (attr === 'radius') {} else {
-	                            if (_jquery2.default.isNumeric(value)) {
-	                                newStyle.style[attr] = value + 'px';
-	                            } else {
-	                                newStyle.style[attr] = value;
-	                            }
-	                        }
-	                        break;
-	                    case 'square':
-	                        if (attr === 'size') {
-	                            newStyle.style['fontSize'] = '' + value;
-	                        } else if (attr === 'radius') {
-	                            newStyle.style['borderRadius'] = value + 'px';
-	                        } else if (attr === 'padding') {
-	                            newStyle.style['padding'] = value + ' ' + value * 2 + 'px';
-	                        } else {
-	                            if (_jquery2.default.isNumeric(value)) {
-	                                newStyle.style[attr] = value + 'px';
-	                            } else {
-	                                newStyle.style[attr] = value;
-	                            }
-	                        }
-	                        break;
-	                    default:
-	                        break;
-	                }
-	                _this6._handleChange(newStyle);
+	                _this6._handleChange(renderStyle(_this6.state.preset, attr, value));
 	            });
 	        }
 	    }, {
@@ -308,7 +277,7 @@
 	            );
 	            if (this.state.wrapper === 'row') wrapper = _react2.default.createElement(
 	                'div',
-	                { className: 's-row' },
+	                { className: 's-row', 'data-render': this.state.wrapper + ' ' + this.state.preset },
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 's-box' },
@@ -335,15 +304,24 @@
 	        key: 'render',
 	        value: function render() {
 	            var compile = function compile() {
-	                // var raw_html = $('#drop_base').html();
+	                var className = "";
+	                var config = document.querySelector('#compile-source .s-row').getAttribute('data-render').split(' ');
+	                switch (config[1]) {
+	                    case 'circle':
+	                        className = '.s-btn-circle';
+	                        break;
+	                    case 'square':
+	                        className = '.s-btn-square';
+	                        break;
+	                }
 	                var styleSheet = document.styleSheets[1];
 	                var target = [];
 	                for (var i = 0; i < Object.keys(styleSheet.cssRules).length; i++) {
-	                    if (styleSheet.cssRules[i].cssText.includes('.s-btn-circle')) {
+	                    if (styleSheet.cssRules[i].cssText.includes(className)) {
 	                        target.push(styleSheet.cssRules[i].cssText);
 	                    }
 	                }
-	                var element = document.querySelector('.s-btn-circle');
+	                var element = document.querySelector(className);
 	                _jquery2.default.ajax({
 	                    url: '/beautify',
 	                    type: 'POST',
@@ -358,8 +336,6 @@
 	                        (0, _jquery2.default)('#head-css').html(compiled.css);
 	                    }
 	                });
-	                // Fill the value
-
 	                // Open modal
 	                (0, _jquery2.default)('#compile-modal').css({
 	                    opacity: 1,
@@ -368,8 +344,6 @@
 	                (0, _jquery2.default)('#compile-modal .s-modal').css({
 	                    transform: 'translate3d(-50%, -50%, 0)'
 	                });
-	                console.log(target);
-	                console.log(element);
 	            };
 	            return _get(Previewer.prototype.__proto__ || Object.getPrototypeOf(Previewer.prototype), 'render', this).call(this, _react2.default.createElement(
 	                'div',
@@ -659,9 +633,48 @@
 	    return Editor;
 	}(Draggable);
 
+	// Preset Handler
+
+
+	var renderStyle = function renderStyle(preset, attr, value) {
+	    var newStyle = {
+	        style: {}
+	    };
+	    switch (preset) {
+	        case 'circle':
+	            if (attr === 'size') {
+	                newStyle.style['width'] = value + 'px';
+	                newStyle.style['height'] = value + 'px';
+	            } else {
+	                if (_jquery2.default.isNumeric(value)) {
+	                    newStyle.style[attr] = value + 'px';
+	                } else {
+	                    newStyle.style[attr] = value;
+	                }
+	            }
+	            break;
+	        case 'square':
+	            if (attr === 'size') {
+	                newStyle.style['fontSize'] = value + 'px';
+	            } else if (attr === 'radius') {
+	                newStyle.style['borderRadius'] = value + 'px';
+	            } else if (attr === 'padding') {
+	                newStyle.style['padding'] = value + 'px ' + value * 2 + 'px';
+	            } else {
+	                if (_jquery2.default.isNumeric(value)) {
+	                    newStyle.style[attr] = value + 'px';
+	                } else {
+	                    newStyle.style[attr] = value;
+	                }
+	            }
+	            break;
+	        default:
+	            break;
+	    }
+	    return newStyle;
+	};
+
 	// Page Logic
-
-
 	document.onmousemove = function (event) {
 	    _helper.EventCenter.trigger('trackMouse', event.clientX, event.clientY);
 	};

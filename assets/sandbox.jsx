@@ -71,7 +71,7 @@ class Draggable extends BaseComponent {
     }
 }
 
-
+// Preset specific
 class Renderer extends BaseComponent {
     constructor () {
         super();
@@ -100,43 +100,7 @@ class Renderer extends BaseComponent {
             }, true);
         });
         EventCenter.bind('updateRenderer', (attr, value) => {
-            let newStyle = {
-                style: {}
-            };
-            switch (this.state.preset) {
-                case 'circle':
-                    if (attr === 'size') {
-                        newStyle.style['width'] = `${value}px`;
-                        newStyle.style['height'] = `${value}px`;
-                    } else if (attr === 'radius') {
-
-                    } else {
-                        if ($.isNumeric(value)) {
-                            newStyle.style[attr] = `${value}px`;
-                        } else {
-                            newStyle.style[attr] = value;
-                        }
-                    }
-                    break;
-                case 'square':
-                    if (attr === 'size') {
-                        newStyle.style['fontSize'] = `${value}`;
-                    } else if (attr === 'radius') {
-                        newStyle.style['borderRadius'] = `${value}px`;
-                    } else if (attr === 'padding') {
-                        newStyle.style['padding'] = `${value} ${value*2}px`;
-                    } else {
-                        if ($.isNumeric(value)) {
-                            newStyle.style[attr] = `${value}px`;
-                        } else {
-                            newStyle.style[attr] = value;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-            this._handleChange(newStyle);
+            this._handleChange(renderStyle(this.state.preset, attr, value));
         });
     }
     render () {
@@ -161,7 +125,7 @@ class Renderer extends BaseComponent {
         }
         let wrapper = <div className='s-box'>{component}</div>;
         if (this.state.wrapper === 'row') wrapper = (
-            <div className='s-row'>
+            <div className='s-row' data-render={`${this.state.wrapper} ${this.state.preset}`}>
                 <div className='s-box'>
                     {component}
                 </div>
@@ -177,15 +141,24 @@ class Previewer extends Draggable {
     }
     render () {
         var compile = () => {
-            // var raw_html = $('#drop_base').html();
+            let className = "";
+            let config = document.querySelector('#compile-source .s-row').getAttribute('data-render').split(' ');
+            switch (config[1]) {
+                case 'circle':
+                    className = '.s-btn-circle';
+                    break;
+                case 'square':
+                    className = '.s-btn-square';
+                    break;
+            }
             var styleSheet = document.styleSheets[1];
             let target = [];
             for (let i = 0; i < Object.keys(styleSheet.cssRules).length; i++) {
-                if (styleSheet.cssRules[i].cssText.includes('.s-btn-circle')) {
+                if (styleSheet.cssRules[i].cssText.includes(className)) {
                     target.push(styleSheet.cssRules[i].cssText);
                 }
             }
-            var element = document.querySelector('.s-btn-circle');
+            var element = document.querySelector(className);
             $.ajax({
                 url : '/beautify',
                 type : 'POST',
@@ -200,8 +173,6 @@ class Previewer extends Draggable {
                     $('#head-css').html(compiled.css);
                 },
             });
-            // Fill the value
-
             // Open modal
             $('#compile-modal').css({
                     opacity: 1,
@@ -210,8 +181,6 @@ class Previewer extends Draggable {
             $('#compile-modal .s-modal').css({
                     transform: 'translate3d(-50%, -50%, 0)'
             });
-            console.log(target);
-            console.log(element);
         }
         return super.render(
             <div id='compile-source' className='s-body'>
@@ -405,6 +374,45 @@ class Editor extends Draggable {
     }
 }
 
+// Preset Handler
+let renderStyle = (preset, attr, value) => {
+    let newStyle = {
+        style: {}
+    };
+    switch (preset) {
+        case 'circle':
+            if (attr === 'size') {
+                newStyle.style['width'] = `${value}px`;
+                newStyle.style['height'] = `${value}px`;
+            } else {
+                if ($.isNumeric(value)) {
+                    newStyle.style[attr] = `${value}px`;
+                } else {
+                    newStyle.style[attr] = value;
+                }
+            }
+            break;
+        case 'square':
+            if (attr === 'size') {
+                newStyle.style['fontSize'] = `${value}px`;
+            } else if (attr === 'radius') {
+                newStyle.style['borderRadius'] = `${value}px`;
+            } else if (attr === 'padding') {
+                newStyle.style['padding'] = `${value}px ${value*2}px`;
+            } else {
+                if ($.isNumeric(value)) {
+                    newStyle.style[attr] = `${value}px`;
+                } else {
+                    newStyle.style[attr] = value;
+                }
+            }
+            break;
+        default:
+            break;
+    }
+    return newStyle;
+}
+
 // Page Logic
 document.onmousemove = (event) => {
     EventCenter.trigger('trackMouse', event.clientX, event.clientY);
@@ -412,11 +420,11 @@ document.onmousemove = (event) => {
 
 window['compileModalClose'] = () => {
     $('#compile-modal').css({
-            opacity: 0,
-            visibility: 'hidden'
+        opacity: 0,
+        visibility: 'hidden'
     });
     $('#compile-modal .s-modal').css({
-            transform: 'translate3d(-50%, -40%, 0)'
+        transform: 'translate3d(-50%, -40%, 0)'
     });
 };
 
