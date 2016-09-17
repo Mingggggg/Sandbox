@@ -134,6 +134,22 @@ class Previewer extends Draggable {
                 case 'square':
                     className = '.s-btn-square';
                     break;
+                case 'underline':
+                    className = '.s-input-underline';
+                    break;
+                case 'glow':
+                    className = '.s-input-glow';
+                    break;
+                case 'default':
+                    className = '.s-slider';
+                    break;
+                case 'popover':
+                    className = '.s-popover';
+                    break;
+                case 'popunder':
+                    className = '.s-popunder';
+                    break;
+
             }
             var styleSheet = document.styleSheets[1];
             let target = [];
@@ -232,6 +248,14 @@ class Input extends BaseComponent {
                             <span className="s-txt s-info" data-msg='Wrapper for the element'>{this.props.attr}</span>
                         </div>
                         <input type="text" className='s-input' value={this.state.value} onChange={onChange} />
+                    </td>
+                </tr>
+            );
+        } else if (this.props.type === 'info') {
+            return (
+                <tr className='s-tr-info'>
+                    <td colSpan="3">
+                        <span>{this.props.value}</span>
                     </td>
                 </tr>
             );
@@ -380,12 +404,28 @@ let moduleLoader = (state) => {
             break;
         case 'input':
             style = Utils.clone(state.style);
-            className = `s-in-${state.preset}`;
+            className = `s-input-${state.preset}`;
             component = (
                 <input style={style} type='text' className={className} placeholder="sandbox"></input>
             );
             if (state.preset === 'glow') component = (
                 <input style={style} type='text' className={className} placeholder="sandbox"></input>
+            );
+            break;
+        case 'slider':
+            style = Utils.clone(state.style);
+            className = `s-slider`;
+            component = (
+                <input style={style} type='range' className={className}></input>
+            );
+            break;
+        case 'popup':
+            style = Utils.clone(state.style);
+            className = `s-${state.preset}`;
+            component = (
+                <div style={style} className={className} data-msg="Your content here">
+                    Your mouse here
+                </div>
             );
             break;
         default:
@@ -433,7 +473,32 @@ let renderStyle = (preset, attr, value) => {
                 newStyle.style['borderBottomWidth'] = `${value/10}px`;
             } else if (attr === 'underline') {
                 newStyle.style['borderBottomColor'] = `${value}`;
+            } else {
+                if ($.isNumeric(value)) {
+                    newStyle.style[attr] = `${value}px`;
+                } else {
+                    newStyle.style[attr] = value;
+                }
+            }
+            break;
+        case 'glow':
+            if (attr === 'size') {
+                newStyle.style['fontSize'] = `${value}px`;
+                newStyle.style['borderWidth'] = `${value/15}px`;
+            } else if (attr === 'border') {
+                newStyle.style['borderColor'] = `${value}`;
             } else if (attr === 'width') {
+                newStyle.style['width'] = `${value}%`;
+            } else {
+                if ($.isNumeric(value)) {
+                    newStyle.style[attr] = `${value}px`;
+                } else {
+                    newStyle.style[attr] = value;
+                }
+            }
+            break;
+        case 'default':
+            if (attr === 'width') {
                 newStyle.style['width'] = `${value}%`;
             } else {
                 if ($.isNumeric(value)) {

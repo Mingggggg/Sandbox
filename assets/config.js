@@ -73,39 +73,78 @@ export let Config = {
                     type: "input"
                 },
                 background: {
-                    value: '#848484',
+                    value: 'transparent',
                     type: 'input'
                 }
             },
             glow: {
+                size: {
+                    value: 27,
+                    type: 'range',
+                    max: 40,
+                    min: 20
+                },
                 padding: {
-                    value: 10,
-                    type: 'range'
+                    value: 4,
+                    type: 'range',
+                    min: 2,
+                    max: 12
+                },
+                width: {
+                    value: 80,
+                    type: 'range',
+                    max: 100,
+                    min: 20
+                },
+                border: {
+                    value: '#d6d6d6',
+                    type: "input"
                 },
                 color: {
-                    value: '#888888',
+                    value: '#333333',
                     type: "input"
+                },
+                background: {
+                    value: 'white',
+                    type: 'input'
                 }
             }
         },
         slider: {
-            padding: {
-                value: 10,
-                type: 'range'
-            },
-            color: {
-                value: '#999999',
-                type: "input"
+            'default': {
+                padding: {
+                    value: 0,
+                    type: 'range',
+                    max: 5
+                },
+                width: {
+                    value: 80,
+                    type: 'range',
+                    max: 90,
+                    min: 50
+                },
+                background: {
+                    value: '#cacaca',
+                    type: 'input'
+                },
+                info: {
+                    value: '* For Chrome only *',
+                    type: 'info'
+                }
             }
         },
         popup: {
-            padding: {
-                value: 10,
-                type: 'range'
+            popover: {
+                info: {
+                    value: "No styling support under current version :(",
+                    type: 'info',
+                },
             },
-            color: {
-                value: '#999999',
-                type: "input"
+            popunder: {
+                info: {
+                    value: "No styling support under current version :(",
+                    type: 'info',
+                },
             }
         },
     },

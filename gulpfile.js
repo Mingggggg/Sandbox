@@ -9,7 +9,7 @@ gulp.task('sass', () => {
 });
 
 gulp.task('babel', () => {
-	gulp.src('assets/sandbox.jsx')
+	gulp.src('assets/sandbox.js')
         .pipe(webpack({
             output: {
                 filename: 'bundle.js'

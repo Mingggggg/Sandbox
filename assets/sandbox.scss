@@ -393,6 +393,7 @@ body, button, input, pre {
             margin: auto;
             text-align: center;
             color: #888888;
+            min-width: 400px;
             font-weight: normal;
             tr {
                 height: 40px;
@@ -403,7 +404,7 @@ body, button, input, pre {
             // Preset / Wrapper
             .s-tr-btn {
                 td:first-child {
-                    width: 40%;
+                    text-align: right;
                     border-bottom: 2px dashed #c3c3c3;
                     font-size: 18px;
                 }
@@ -440,7 +441,7 @@ body, button, input, pre {
                     padding: 4px;
                     background: #ececec;
                     border: none;
-                    width: 32%;
+                    width: 34%;
                     text-align: center;
                     color: #888888;
                     border-bottom: solid 2px #c5c5c5;
@@ -449,7 +450,7 @@ body, button, input, pre {
                     vertical-align: middle;
                 }
                 .s-input[type="text"]:focus {
-                    width: 40%;
+                    width: 42%;
                     outline: 0;
                     border-bottom: solid 2px #b0b0b0;
                 }
@@ -660,10 +661,12 @@ body, button, input, pre {
 }
 
 // Output components
+
+// Button
 .s-btn-circle {
     position:relative;
     border: 0;
-    box-shadow: 0;
+    box-shadow: none;
     background: transparent;
     vertical-align: middle;
     width: 150px;
@@ -672,6 +675,7 @@ body, button, input, pre {
     color: #FFFFFF;
     font-size: 72px;
 	background: #40b572;
+    @include transit('swift');
     .s-txt {
         position: absolute;
         top: 50%;
@@ -686,9 +690,14 @@ body, button, input, pre {
 	outline: 0;
 }
 
+.s-btn-circle:hover {
+    -webkit-filter: hue-rotate(90deg);
+	filter: hue-rotate(90deg);
+}
+
 .s-btn-circle:active {
-    -webkit-filter: brightness(90%);
-    filter: brightness(90%);
+    -webkit-filter: hue-rotate(90deg) brightness(90%);
+    filter: hue-rotate(90deg) brightness(90%);
 }
 
 .s-btn-square {
@@ -702,20 +711,28 @@ body, button, input, pre {
 	font-size: 18px;
 	color: #FFFFFF;
 	background: #40b572;
+    @include transit('swift');
 }
 
 .s-btn-square:focus {
 	outline: 0;
 }
 
-.s-btn-square:active {
-    -webkit-filter: brightness(90%);
-    filter: brightness(90%);
+.s-btn-square:hover {
+    -webkit-filter: hue-rotate(90deg);
+	filter: hue-rotate(90deg);
 }
 
-.s-in-underline[type="text"] {
+.s-btn-square:active {
+    -webkit-filter: hue-rotate(90deg) brightness(90%);
+    filter: hue-rotate(90deg) brightness(90%);
+}
+
+// Input
+.s-input-underline[type="text"] {
+    position: relative;
     padding: 4px;
-    background: #848484;
+    background: transparent;
     border: none;
     width: 80%;
     font-size: 27px;
@@ -726,8 +743,129 @@ body, button, input, pre {
     @include transit('fast');
     vertical-align: middle;
 }
-.s-in-underline[type="text"]:focus {
+
+.s-input-underline[type="text"]:focus {
     width: 100%;
     outline: 0;
     border-bottom-color: #b0b0b0;
+}
+
+.s-input-glow[type="text"] {
+    position: relative;
+    padding: 4px;
+    background: white;
+    border: none;
+    width: 80%;
+    font-size: 27px;
+    text-align: center;
+    color: #333333;
+    border: solid 2px #d6d6d6;
+    border-radius: 2px;
+    @include transit('fast');
+    vertical-align: middle;
+}
+
+.s-input-glow[type="text"]:focus {
+    outline: 0;
+    box-shadow: 0 0 10px #9ecaed;
+}
+
+
+// Slider
+.s-slider[type="range"] {
+    position: relative;
+    outline: 0 !important;
+    -webkit-appearance: none;
+    background: #cacaca;
+    height: 5px;
+    border-radius: 3px;
+}
+
+.s-slider[type="range"]:focus {
+    outline: 0;
+}
+
+.s-slider[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    position: relative;
+    top: 0px;
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    border-radius: 40px;
+    background: white;
+    border: 1px solid #e5e5e5;
+    -webkit-box-shadow: 0 0 3px gray;
+    -moz-box-shadow: 0 0 3px gray;
+    box-shadow: 0 0 3px gray;
+    transition: all 0.6s ease;
+}
+
+.s-slider[type="range"]:active::-webkit-slider-thumb {
+    opacity: 0.9;
+    background: #eeeeee;
+}
+
+// Pop ups
+.s-popover {
+    position: relative;
+    display: inline-block;
+    color: white;
+    padding: 10px;
+    border: 2px solid white;
+}
+
+.s-popover::before {
+    content: attr(data-msg);
+    position: absolute;
+    border-radius: 3px;
+    left: 5px;
+    top: -36px;
+    font-size: 12px;
+    color: white;
+    padding: 8px 10px;
+    white-space: nowrap;
+    background: #333333;
+    opacity: 0;
+    z-index: 10;
+    transform: translate3d(0, 5px, 0);
+    @include transit('swift');
+}
+
+.s-popover:hover::before {
+    transform: translate3d(0,0,0);
+    opacity: 1;
+}
+
+.s-popunder {
+    position: relative;
+    display: inline-block;
+    color: white;
+    padding: 10px;
+    border: 2px solid white;
+}
+
+.s-popunder::before {
+    content: attr(data-msg);
+    position: absolute;
+    border-radius: 3px;
+    left: 5px;
+    bottom: -36px;
+    font-size: 12px;
+    color: white;
+    padding: 8px 10px;
+    white-space: nowrap;
+    background: #333333;
+    opacity: 0;
+    z-index: 10;
+    transform: translate3d(0, 5px, 0);
+    @include transit('swift');
+}
+
+.s-popunder:hover::before {
+    transform: translate3d(0,0,0);
+    opacity: 1;
 }
