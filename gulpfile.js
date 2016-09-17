@@ -39,3 +39,4 @@ gulp.task('babel', () => {
 });
 
 gulp.task('build', ['babel', 'sass']);
+gulp.task('sass', ['sass']);

@@ -1,9 +1,17 @@
+var webpack = require("webpack");
+
 module.exports = {
     entry: {
         main: './assets/sandbox.js'
     },
     output: {
         filename: './dist/bundle.js'
+    },
+    resolve: {
+        alias: {
+            'react': 'react-lite',
+            'react-dom': 'react-lite'
+        }
     },
     module: {
         loaders: [
@@ -17,4 +25,9 @@ module.exports = {
             },
         ]
     },
+    plugins:[
+        new webpack.DefinePlugin({
+            PRODUCTION: true
+        })
+    ],
 }
