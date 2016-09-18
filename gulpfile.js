@@ -17,19 +17,11 @@ gulp.task('babel', () => {
             module: {
                 loaders: [
                     {
-                        test: /\.jsx$/,
-                        exclude: /(node_modules|bower_components)/,
-                        loader: 'babel-loader',
-                        query: {
-                            presets: ['react','es2015']
-                        }
-                    },
-                    {
                         test: /\.js$/,
                         exclude: /(node_modules|bower_components)/,
                         loader: 'babel-loader',
                         query: {
-                            presets: ['es2015']
+                            presets: ['react', 'es2015']
                         }
                     }
                 ]
@@ -39,4 +31,4 @@ gulp.task('babel', () => {
 });
 
 gulp.task('build', ['babel', 'sass']);
-gulp.task('sass', ['sass']);
+gulp.task('run', ['sass']);

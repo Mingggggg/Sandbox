@@ -1,8 +1,8 @@
 {
     "events": {
-        "restart": "gulp build"
+        "restart": "./bin/build.sh dev"
     },
     "ignore": ["dist"],
     "watch": ["assets"],
-    "ext": "jsx json scss"
+    "ext": "js jsx json scss"
 }

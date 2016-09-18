@@ -515,6 +515,15 @@ let renderStyle = (preset, attr, value) => {
 }
 
 // Page Logic
+$(document).ready(()=>{
+    setTimeout(()=>{
+        $('#loader').css({
+            opacity: 0,
+            visibility: 'hidden'
+        });
+    }, 1500);
+});
+
 document.onmousemove = (event) => {
     EventCenter.trigger('trackMouse', event.clientX, event.clientY);
 };

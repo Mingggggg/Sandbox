@@ -3,21 +3,24 @@
 OPT=$1
 MSG=$2
 
-cd ..
+echo $PWD
 
-# ./node_modules/webpack/bin/webpack.js -p
-#
-# gulp sass
+gulp run
 
 case $OPT in
-    deploy)
+    dev)
+        ./node_modules/webpack/bin/webpack.js
+        ;;
+    pro)
+        ./node_modules/webpack/bin/webpack.js -p
+
         git add .
 
-        git commit -m "{$MSG}"
+        git commit -m "$MSG"
 
-        # git push origin master
-        #
-        # git push evennode master
+        git push origin master
+
+        git push evennode master
         ;;
     *)
         echo "build finished"

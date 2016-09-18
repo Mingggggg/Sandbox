@@ -1,81 +1,99 @@
-<head>
-    <meta charset="utf-8"/>
-	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-	<link rel="stylesheet" href="sandbox.css">
-</head>
-<body>
-<div id="view-wrap">
-	<div id="side-wrap">
-	</div>
-	<div id="hero-wrap">
-		<div class="s-row" id="navbar">
-			<div class="s-box s-lt">
-				<button class="s-btn s-ct" id="home-expand">
-					&#8801;
-				</button>
-			</div>
-			<div class="s-box s-rt">
-				<button class="s-btn s-ct s-dis" data-msg="Coming soon" id="home-login">
-					LOG IN
-				</button>
-			</div>
-			<div class="s-box s-rt">
-				<button class="s-btn s-ct s-dis" data-msg="Coming soon" id="home-helper">
-					<span class="s-txt">?</span>
-				</button>
-			</div>
-			<div class="s-box s-rt">
-				<button class="s-btn s-ct" id="home-version">
-					Version 1.0.0
-				</button>
-			</div>
-		</div>
-        <div class='s-modal-wrap' id='compile-modal'>
-            <div class='s-modal'>
-                <div class="s-row">
-                    <div class='s-box s-rt'>
-                        <button class='s-btn' onclick='window.compileModalClose()'>
-                            &#x2715;
-                        </button>
-                    </div>
-                </div>
-                <table>
-                    <tbody>
-                        <tr>
-                            <th>
-                                HTML
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <pre id='body-html'></pre>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                CSS
-                            </th>
-                        </tr>
-                        </tr>
-                            <td>
-                                <pre id='head-css'></pre>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>Sandbox - A component builder</title>
+      <meta name="description" content="A real-time component building tool intended to provides pure css solution to front-end's quick prototyping needs.">
+      <meta name="author" content="Mingyang Wang">
+      <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+      <link rel="stylesheet" href="sandbox.css">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!--[if lt IE 9]>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+      <![endif]-->
+    </head>
+    <body>
+    <div class='s-modal-wrap' id='loader'>
+        <div class="s-row">
+            <div id="css-loader">
+                <div id="box"></div>
+                <div id="hill"></div>
             </div>
+            <span class="s-blink">Downloading content from overseas server</span>
         </div>
-		<div id="workspace">
-            <div id="previewer-wrap"></div>
-            <div id="editor-wrap"></div>
-		</div>
-		<div class="s-watermark" id="home-brand">
-			Sandbox
-		</div>
-		<div class="s-watermark" id="home-author">
-			@Mingyang Wang
-		</div>
-	</div>
-</div>
-<script type="text/javascript" src="bundle.js"></script>
-</body>
+    </div>
+    <div id="view-wrap">
+    	<div id="hero-wrap">
+    		<div class="s-row" id="navbar">
+    			<div class="s-box s-lt">
+    				<button class="s-btn s-ct" id="home-expand">
+    					&#8801;
+    				</button>
+    			</div>
+    			<div class="s-box s-rt">
+    				<button class="s-btn s-ct s-dis" data-msg="Coming soon" id="home-login">
+    					LOG IN
+    				</button>
+    			</div>
+    			<div class="s-box s-rt">
+    				<button class="s-btn s-ct s-dis" data-msg="Coming soon" id="home-helper">
+    					<span class="s-txt">?</span>
+    				</button>
+    			</div>
+    			<div class="s-box s-rt">
+    				<button class="s-btn s-ct" id="home-version">
+    					Version 1.0.0
+    				</button>
+    			</div>
+    		</div>
+            <div class='s-modal-wrap' id='compile-modal'>
+                <div class='s-modal'>
+                    <div class="s-row">
+                        <div class='s-box s-rt'>
+                            <button class='s-btn' onclick='window.compileModalClose()'>
+                                &#x2715;
+                            </button>
+                        </div>
+                    </div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>
+                                    HTML
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <pre id='body-html'></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    CSS
+                                </th>
+                            </tr>
+                            </tr>
+                                <td>
+                                    <pre id='head-css'></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    		<div id="workspace">
+                <div id="previewer-wrap"></div>
+                <div id="editor-wrap"></div>
+    		</div>
+    		<div class="s-watermark" id="home-brand">
+    			Sandbox
+    		</div>
+    		<div class="s-watermark" id="home-author">
+    			@Mingyang Wang
+    		</div>
+    	</div>
+    </div>
+    <script type="text/javascript" src="bundle.js"></script>
+    </body>
+</html>

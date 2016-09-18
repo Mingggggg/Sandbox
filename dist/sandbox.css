@@ -125,6 +125,97 @@ body, button, input, pre {
         margin-top: 5px;
         padding: 10px 0px; }
 
+#loader {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100vh;
+  background: #404456;
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+  transition: all 0.6s cubic-bezier(0.215, 0.61, 0.355, 1); }
+  #loader #css-loader {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    margin-top: -2.7em;
+    margin-left: -2.7em;
+    width: 5.4em;
+    height: 5.4em;
+    background-color: #404456; }
+  #loader #hill {
+    position: absolute;
+    width: 7.1em;
+    height: 7.1em;
+    top: 1.7em;
+    left: 1.7em;
+    background-color: transparent;
+    border-left: .25em solid whitesmoke;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg); }
+  #loader #hill:after {
+    content: '';
+    position: absolute;
+    width: 7.1em;
+    height: 7.1em;
+    left: 0;
+    background-color: #404456; }
+  #loader #box {
+    position: absolute;
+    left: 0;
+    bottom: -.1em;
+    width: 1em;
+    height: 1em;
+    background-color: transparent;
+    border: .25em solid whitesmoke;
+    border-radius: 15%;
+    -webkit-transform: translate(0, -1em) rotate(-45deg);
+    -moz-transform: translate(0, -1em) rotate(-45deg);
+    -ms-transform: translate(0, -1em) rotate(-45deg);
+    transform: translate(0, -1em) rotate(-45deg);
+    animation: push 2.2s cubic-bezier(0.79, 0, 0.47, 0.97) infinite; }
+
+@keyframes push {
+  0% {
+    transform: translate(0, -1em) rotate(-45deg); }
+  5% {
+    transform: translate(0, -1em) rotate(-50deg); }
+  20% {
+    transform: translate(1em, -2em) rotate(47deg); }
+  25% {
+    transform: translate(1em, -2em) rotate(45deg); }
+  30% {
+    transform: translate(1em, -2em) rotate(40deg); }
+  45% {
+    transform: translate(2em, -3em) rotate(137deg); }
+  50% {
+    transform: translate(2em, -3em) rotate(135deg); }
+  55% {
+    transform: translate(2em, -3em) rotate(130deg); }
+  70% {
+    transform: translate(3em, -4em) rotate(217deg); }
+  75% {
+    transform: translate(3em, -4em) rotate(220deg); }
+  100% {
+    transform: translate(0, -1em) rotate(-225deg); } }
+  #loader .s-blink {
+    position: absolute;
+    top: 54%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+    color: white;
+    font-size: 16px;
+    opacity: 0;
+    animation: blinker 2.2s cubic-bezier(0.79, 0, 0.47, 0.97) infinite; }
+
+@keyframes blinker {
+  50% {
+    opacity: 1; } }
+
 #editor {
   position: absolute;
   top: 10%;
@@ -387,6 +478,8 @@ body, button, input, pre {
 
 #compile-source {
   background: #44455f; }
+  #compile-source .s-row {
+    height: 100%; }
 
 .s-btn {
   position: relative;
