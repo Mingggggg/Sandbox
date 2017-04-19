@@ -43,4 +43,3 @@ This is the implementation of framework only. More contents are coming.
 ## Acknowledgments
 
 * [js-beautify](https://www.npmjs.com/package/js-beautify) for rendering pretty dom and css
-* My despiration to nail an internship
